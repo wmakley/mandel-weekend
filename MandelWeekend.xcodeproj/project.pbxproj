@@ -18,6 +18,8 @@
 		3D690EC918479287006267E5 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D690EA818479287006267E5 /* Cocoa.framework */; };
 		3D690ED118479287006267E5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D690ECF18479287006267E5 /* InfoPlist.strings */; };
 		3D690ED318479287006267E5 /* MandelWeekendTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D690ED218479287006267E5 /* MandelWeekendTests.m */; };
+		3D690EDE1847C89F006267E5 /* mandelbrot.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D690EDD1847C89F006267E5 /* mandelbrot.m */; };
+		3D690EE31848E64C006267E5 /* MandelbrotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D690EE21848E64C006267E5 /* MandelbrotView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +52,10 @@
 		3D690ECE18479287006267E5 /* MandelWeekendTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MandelWeekendTests-Info.plist"; sourceTree = "<group>"; };
 		3D690ED018479287006267E5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		3D690ED218479287006267E5 /* MandelWeekendTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MandelWeekendTests.m; sourceTree = "<group>"; };
+		3D690EDC1847C88B006267E5 /* mandelbrot.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mandelbrot.h; sourceTree = "<group>"; };
+		3D690EDD1847C89F006267E5 /* mandelbrot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mandelbrot.m; sourceTree = "<group>"; };
+		3D690EE11848E64C006267E5 /* MandelbrotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MandelbrotView.h; sourceTree = "<group>"; };
+		3D690EE21848E64C006267E5 /* MandelbrotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MandelbrotView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,6 +126,10 @@
 				3D690EBD18479287006267E5 /* MainMenu.xib */,
 				3D690EC018479287006267E5 /* Images.xcassets */,
 				3D690EAF18479287006267E5 /* Supporting Files */,
+				3D690EDC1847C88B006267E5 /* mandelbrot.h */,
+				3D690EDD1847C89F006267E5 /* mandelbrot.m */,
+				3D690EE11848E64C006267E5 /* MandelbrotView.h */,
+				3D690EE21848E64C006267E5 /* MandelbrotView.m */,
 			);
 			path = MandelWeekend;
 			sourceTree = "<group>";
@@ -252,7 +262,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D690EDE1847C89F006267E5 /* mandelbrot.m in Sources */,
 				3D690EBC18479287006267E5 /* AppDelegate.m in Sources */,
+				3D690EE31848E64C006267E5 /* MandelbrotView.m in Sources */,
 				3D690EB518479287006267E5 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -464,6 +476,7 @@
 				3D690ED818479287006267E5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		3D690ED918479287006267E5 /* Build configuration list for PBXNativeTarget "MandelWeekendTests" */ = {
 			isa = XCConfigurationList;
@@ -472,6 +485,7 @@
 				3D690EDB18479287006267E5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
