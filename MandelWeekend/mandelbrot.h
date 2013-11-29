@@ -6,9 +6,7 @@
 //  Copyright (c) 2013 William Makley. All rights reserved.
 //
 
-#ifndef MandelWeekend_mandelbrot_h
-#define MandelWeekend_mandelbrot_h
+#import <Foundation/Foundation.h>
 
-int mandelbrot_escape_time(float x, float y, int max_iterations);
-
-#endif
+NSInteger mandelbrot_escape_time(NSPoint point, NSInteger max_iterations);
+NSPoint mandelbrot_point_for_pixel(NSPoint pixel, NSSize dimensions);
