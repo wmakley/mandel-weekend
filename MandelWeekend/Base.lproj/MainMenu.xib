@@ -649,22 +649,60 @@
         <window title="MandelWeekend" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="371">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="0.0" y="386" width="480" height="360"/>
+            <rect key="contentRect" x="0.0" y="353" width="534" height="393"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1366" height="746"/>
             <view key="contentView" id="372">
-                <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
+                <rect key="frame" x="0.0" y="0.0" width="534" height="393"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="57n-nC-htd" customClass="MandelbrotView">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
+                        <rect key="frame" x="0.0" y="55" width="534" height="338"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     </customView>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Bvt-tN-pi0">
+                        <rect key="frame" x="18" y="20" width="91" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Elapsed Time:" id="rfh-ez-0MB">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <button verticalHuggingPriority="744" translatesAutoresizingMaskIntoConstraints="NO" id="MJz-Xl-Fls">
+                        <rect key="frame" x="438" y="10" width="87" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="push" title="Refresh" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Lcf-7c-Lam">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="refreshButtonPressed:" target="494" id="HTj-tg-Hps"/>
+                        </connections>
+                    </button>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Tre-yU-mMg">
+                        <rect key="frame" x="113" y="20" width="336" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Seconds" id="NYb-l5-kHr">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                        <connections>
+                            <binding destination="494" name="value" keyPath="mandelbrotView.benchmark" id="Wav-6H-dBs"/>
+                        </connections>
+                    </textField>
                 </subviews>
                 <constraints>
                     <constraint firstItem="57n-nC-htd" firstAttribute="leading" secondItem="372" secondAttribute="leading" id="1Dv-96-g3F"/>
+                    <constraint firstItem="Bvt-tN-pi0" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="20" id="33m-qS-Nzm"/>
                     <constraint firstItem="57n-nC-htd" firstAttribute="top" secondItem="372" secondAttribute="top" id="HEP-0q-Uct"/>
+                    <constraint firstAttribute="bottom" secondItem="57n-nC-htd" secondAttribute="bottom" constant="55" id="HVR-1t-J3k"/>
+                    <constraint firstAttribute="bottom" secondItem="Tre-yU-mMg" secondAttribute="bottom" constant="20" id="KZn-It-nWn"/>
+                    <constraint firstAttribute="bottom" secondItem="Bvt-tN-pi0" secondAttribute="bottom" constant="20" id="PnV-ju-gzX"/>
+                    <constraint firstAttribute="bottom" secondItem="MJz-Xl-Fls" secondAttribute="bottom" constant="17" id="UMA-WK-s3g"/>
                     <constraint firstAttribute="trailing" secondItem="57n-nC-htd" secondAttribute="trailing" id="hPq-Ew-IXs"/>
-                    <constraint firstAttribute="bottom" secondItem="57n-nC-htd" secondAttribute="bottom" id="mlM-vR-G6p"/>
+                    <constraint firstItem="Tre-yU-mMg" firstAttribute="leading" secondItem="Bvt-tN-pi0" secondAttribute="trailing" constant="10" id="kaI-KF-CsE"/>
+                    <constraint firstAttribute="trailing" secondItem="MJz-Xl-Fls" secondAttribute="trailing" constant="15" id="w09-z7-QJs"/>
                 </constraints>
             </view>
             <connections>
@@ -673,10 +711,12 @@
         </window>
         <customObject id="494" customClass="AppDelegate">
             <connections>
+                <outlet property="benchmarkTextField" destination="Tre-yU-mMg" id="rfj-yV-1Xm"/>
                 <outlet property="mandelbrotView" destination="57n-nC-htd" id="KVG-rm-Cm7"/>
                 <outlet property="window" destination="371" id="532"/>
             </connections>
         </customObject>
         <customObject id="420" customClass="NSFontManager"/>
+        <userDefaultsController representsSharedInstance="YES" id="32P-es-oYv"/>
     </objects>
 </document>

@@ -13,5 +13,8 @@
 
 @property (assign) IBOutlet NSWindow *window;
 @property (assign) IBOutlet MandelbrotView *mandelbrotView;
+@property (assign) IBOutlet NSTextField *benchmarkTextField;
+
+- (IBAction)refreshButtonPressed:(id)sender;
 
 @end

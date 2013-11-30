@@ -14,7 +14,15 @@
 
 static UInt32 colorPalette[MAX_ITERATIONS];
 
+@interface MandelbrotView (Private)
+@property (readonly) NSBitmapImageRep *fractalBitmapRepresentation;
+- (void)drawFractal;
+- (void)generateColorPalette;
+@end
+
 @implementation MandelbrotView
+
+@synthesize benchmark;
 
 - (id)initWithFrame:(NSRect)frame
 {
@@ -38,6 +46,14 @@ static UInt32 colorPalette[MAX_ITERATIONS];
     colorPalette[MAX_ITERATIONS - 1] = 0x000000FF; // black if point doesn't escape
 }
 
+- (void)clearFractal;
+{
+    if (fractalBitmapRepresentation) {
+        [fractalImage removeRepresentation:fractalBitmapRepresentation];
+        fractalBitmapRepresentation = nil;
+    }
+}
+
 - (void)drawFractalAsync
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -48,26 +64,37 @@ static UInt32 colorPalette[MAX_ITERATIONS];
     });
 }
 
+- (void)resize
+{
+    [self clearFractal];
+    [self drawFractalAsync];
+}
+
+- (NSBitmapImageRep *)fractalBitmapRepresentation {
+    if (!fractalBitmapRepresentation) {
+        NSRect offscreenRect = [self bounds];
+        fractalBitmapRepresentation = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:nil
+                                                             pixelsWide:offscreenRect.size.width
+                                                             pixelsHigh:offscreenRect.size.height
+                                                          bitsPerSample:8
+                                                        samplesPerPixel:4
+                                                               hasAlpha:YES
+                                                               isPlanar:NO
+                                                         colorSpaceName:NSCalibratedRGBColorSpace
+                                                           bitmapFormat:0
+                                                            bytesPerRow:(4 * offscreenRect.size.width)
+                                                           bitsPerPixel:32];
+        [fractalImage addRepresentation:fractalBitmapRepresentation];
+    }
+    return fractalBitmapRepresentation;
+}
+
 - (void)drawFractal
 {
-    if (fractalRep) {
-        [fractalImage removeRepresentation:fractalRep];
-        fractalRep = nil;
-    }
-    NSRect offscreenRect = [self bounds];
-    fractalRep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:nil
-                                                           pixelsWide:offscreenRect.size.width
-                                                           pixelsHigh:offscreenRect.size.height
-                                                        bitsPerSample:8
-                                                      samplesPerPixel:4
-                                                             hasAlpha:YES
-                                                             isPlanar:NO
-                                                       colorSpaceName:NSCalibratedRGBColorSpace
-                                                         bitmapFormat:0
-                                                          bytesPerRow:(4 * offscreenRect.size.width)
-                                                         bitsPerPixel:32];
-    [fractalImage addRepresentation:fractalRep];
+    [self setBenchmark:0];
+    NSTimeInterval benchStart = [NSDate timeIntervalSinceReferenceDate];
     
+    NSBitmapImageRep *fractalRep = [self fractalBitmapRepresentation];
     [NSGraphicsContext saveGraphicsState];
     [NSGraphicsContext setCurrentContext:[NSGraphicsContext
                                           graphicsContextWithBitmapImageRep:fractalRep]];
@@ -75,34 +102,41 @@ static UInt32 colorPalette[MAX_ITERATIONS];
     unsigned char *bitmapData = [fractalRep bitmapData];
     NSInteger pixelsWide = [fractalRep pixelsWide];
     NSInteger pixelsHigh = [fractalRep pixelsHigh];
-    NSInteger bitmapLength = 4 * pixelsWide * pixelsHigh;
+    //NSInteger bitmapLength = 4 * pixelsWide * pixelsHigh;
     
-    NSPoint pixel = NSMakePoint(0.0f, 0.0f);
-    NSSize imageSize = NSMakeSize([fractalRep pixelsWide], [fractalRep pixelsHigh]);
+    //NSPoint pixel = NSMakePoint(0.0f, 0.0f);
+    NSSize imageSize = NSMakeSize(pixelsWide, pixelsHigh);
     
-    for (NSInteger i = 0; i < bitmapLength; i += 4) {
+    dispatch_apply(pixelsHigh * pixelsWide, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(size_t i){
         
-        pixel.x = (i / 4) % pixelsWide;
-        pixel.y = (i / 4) / pixelsWide;
+        NSPoint pixel = NSMakePoint(i % pixelsWide, i / pixelsWide);
         
         NSPoint mandelbrotPoint = mandelbrot_point_for_pixel(pixel, imageSize);
         NSInteger escapeTime = mandelbrot_escape_time(mandelbrotPoint, MAX_ITERATIONS);
         UInt32 color = colorPalette[escapeTime - 1];
         
-        bitmapData[i] = color >> 24;
-        bitmapData[i+1] = color >> 16;
-        bitmapData[i+2] = color >> 8;
-        bitmapData[i+3] = color;
+        NSInteger bitmapIndex = i * 4;
+        bitmapData[bitmapIndex] = color >> 24;
+        bitmapData[bitmapIndex+1] = color >> 16;
+        bitmapData[bitmapIndex+2] = color >> 8;
+        bitmapData[bitmapIndex+3] = color;
 
-    }
+    });
     
     [NSGraphicsContext restoreGraphicsState];
+    
+    NSTimeInterval benchEnd = [NSDate timeIntervalSinceReferenceDate];
+    [self setBenchmark:(benchEnd - benchStart)];
 }
 
 - (void)drawRect:(NSRect)dirtyRect
 {
-	[super drawRect:dirtyRect];
-    [fractalImage drawInRect:[self bounds]];
+    [super drawRect:dirtyRect];
+    [[NSColor blackColor] setFill];
+    NSRectFill(dirtyRect);
+    if (fractalImage.representations.count > 0) {
+        [fractalImage drawInRect:[self bounds]];
+    }
 }
 
 @end

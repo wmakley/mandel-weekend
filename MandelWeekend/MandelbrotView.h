@@ -10,12 +10,14 @@
 
 @interface MandelbrotView : NSView <NSWindowDelegate>
 {
-    NSBitmapImageRep *fractalRep;
+    NSBitmapImageRep *fractalBitmapRepresentation;
     NSImage *fractalImage;
 }
 
-- (void)drawFractal;
+@property (assign) NSTimeInterval benchmark;
+
+- (void)clearFractal;
 - (void)drawFractalAsync;
-- (void)generateColorPalette;
+- (void)resize;
 
 @end

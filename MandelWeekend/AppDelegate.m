@@ -15,9 +15,16 @@
     [self.mandelbrotView drawFractalAsync];
 }
 
+- (IBAction)refreshButtonPressed:(id)sender
+{
+    [self.mandelbrotView clearFractal];
+    //[self.mandelbrotView setNeedsDisplay:YES];
+    [self.mandelbrotView drawFractalAsync];
+}
+
 - (void)windowDidEndLiveResize:(NSNotification *)notification
 {
-    [self.mandelbrotView drawFractalAsync];
+    [self.mandelbrotView resize];
 }
 
 @end
