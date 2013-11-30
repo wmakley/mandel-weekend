@@ -24,6 +24,6 @@ NSInteger mandelbrot_escape_time(NSPoint point, NSInteger max_iterations) {
 
 NSPoint mandelbrot_point_for_pixel(NSPoint pixel, NSSize dimensions) {
     CGFloat x = pixel.x / dimensions.width * 3.5f - 2.5f;
-    CGFloat y = pixel.y / dimensions.height * -2.0f + 1.0f;
+    CGFloat y = pixel.y / dimensions.height * -2.3f + 1.15f;
     return NSMakePoint(x, y);
 }
