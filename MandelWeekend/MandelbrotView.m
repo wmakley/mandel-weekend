@@ -102,15 +102,16 @@ static UInt32 colorPalette[MAX_ITERATIONS];
     unsigned char *bitmapData = [fractalRep bitmapData];
     NSInteger pixelsWide = [fractalRep pixelsWide];
     NSInteger pixelsHigh = [fractalRep pixelsHigh];
-    //NSInteger bitmapLength = 4 * pixelsWide * pixelsHigh;
-    
-    //NSPoint pixel = NSMakePoint(0.0f, 0.0f);
+    NSInteger totalPixels = pixelsWide * pixelsHigh;
+
     NSSize imageSize = NSMakeSize(pixelsWide, pixelsHigh);
     
-    dispatch_apply(pixelsHigh * pixelsWide, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(size_t i){
+    dispatch_apply(totalPixels,
+                   dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
+                   ^(size_t i){
         
         NSPoint pixel = NSMakePoint(i % pixelsWide, i / pixelsWide);
-        
+
         NSPoint mandelbrotPoint = mandelbrot_point_for_pixel(pixel, imageSize);
         NSInteger escapeTime = mandelbrot_escape_time(mandelbrotPoint, MAX_ITERATIONS);
         UInt32 color = colorPalette[escapeTime - 1];
