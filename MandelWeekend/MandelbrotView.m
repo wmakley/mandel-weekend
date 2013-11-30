@@ -8,6 +8,7 @@
 
 #import "MandelbrotView.h"
 #import "mandelbrot.h"
+#import <dispatch/dispatch.h>
 
 #define MAX_ITERATIONS 1000
 
@@ -27,9 +28,24 @@ static UInt32 colorPalette[MAX_ITERATIONS];
 
 - (void)generateColorPalette
 {
-    for (NSInteger i = 0; i < MAX_ITERATIONS; i += 1) {
-        colorPalette[i] = i % 1000 * 10;
+    for (UInt32 i = 0; i < MAX_ITERATIONS - 1; i += 1) {
+        UInt32 color = 0x000000FF; // full alpha
+        color = color | (((MAX_ITERATIONS - i) % 256) << 8);
+        color = color | ((i % 256) << 16);
+        color = color | ((i * 10 % 256) << 24);
+        colorPalette[i] = color;
     }
+    colorPalette[MAX_ITERATIONS - 1] = 0x000000FF; // black if point doesn't escape
+}
+
+- (void)drawFractalAsync
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self drawFractal];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self setNeedsDisplay:YES];
+        });
+    });
 }
 
 - (void)drawFractal
@@ -57,29 +73,27 @@ static UInt32 colorPalette[MAX_ITERATIONS];
                                           graphicsContextWithBitmapImageRep:fractalRep]];
     
     unsigned char *bitmapData = [fractalRep bitmapData];
-    NSInteger bitmapLength = 4 * [fractalRep pixelsWide] * [fractalRep pixelsHigh];
+    NSInteger pixelsWide = [fractalRep pixelsWide];
+    NSInteger pixelsHigh = [fractalRep pixelsHigh];
+    NSInteger bitmapLength = 4 * pixelsWide * pixelsHigh;
     
     NSPoint pixel = NSMakePoint(0.0f, 0.0f);
     NSSize imageSize = NSMakeSize([fractalRep pixelsWide], [fractalRep pixelsHigh]);
-    NSPoint mandelbrotPoint;
-    NSInteger escapeTime;
     
     for (NSInteger i = 0; i < bitmapLength; i += 4) {
-        pixel.x += 1;
-        if (pixel.x > imageSize.width - 1) {
-            pixel.x = 0;
-            pixel.y += 1;
-        }
-        mandelbrotPoint = mandelbrot_point_for_pixel(pixel, imageSize);
-        escapeTime = mandelbrot_escape_time(mandelbrotPoint, MAX_ITERATIONS);
         
-        if (escapeTime < MAX_ITERATIONS) {
-            bitmapData[i] = colorPalette[escapeTime] > 2;
-            bitmapData[i+1] = colorPalette[escapeTime] > 1;
-            bitmapData[i+2] = colorPalette[escapeTime];
-        }
+        pixel.x = (i / 4) % pixelsWide;
+        pixel.y = (i / 4) / pixelsWide;
         
-        bitmapData[i+3] = 255;
+        NSPoint mandelbrotPoint = mandelbrot_point_for_pixel(pixel, imageSize);
+        NSInteger escapeTime = mandelbrot_escape_time(mandelbrotPoint, MAX_ITERATIONS);
+        UInt32 color = colorPalette[escapeTime - 1];
+        
+        bitmapData[i] = color >> 24;
+        bitmapData[i+1] = color >> 16;
+        bitmapData[i+2] = color >> 8;
+        bitmapData[i+3] = color;
+
     }
     
     [NSGraphicsContext restoreGraphicsState];

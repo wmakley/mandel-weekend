@@ -12,14 +12,12 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    [self.mandelbrotView drawFractal];
-    [self.mandelbrotView setNeedsDisplay:YES];
+    [self.mandelbrotView drawFractalAsync];
 }
 
 - (void)windowDidEndLiveResize:(NSNotification *)notification
 {
-    [self.mandelbrotView drawFractal];
-    [self.mandelbrotView setNeedsDisplay:YES];
+    [self.mandelbrotView drawFractalAsync];
 }
 
 @end

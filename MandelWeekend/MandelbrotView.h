@@ -15,6 +15,7 @@
 }
 
 - (void)drawFractal;
+- (void)drawFractalAsync;
 - (void)generateColorPalette;
 
 @end
