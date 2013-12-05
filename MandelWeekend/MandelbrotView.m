@@ -16,6 +16,7 @@
 @property (readonly) NSBitmapImageRep *fractalBitmapRepresentation;
 - (void)drawFractal;
 - (void)generateColorPalette;
+- (NSPoint)coordinatesOfPixelAtIndex:(NSInteger)index width:(NSInteger)width height:(NSInteger)height;
 @end
 
 @implementation MandelbrotView
@@ -59,6 +60,12 @@
         [fractalImage removeRepresentation:fractalBitmapRepresentation];
         fractalBitmapRepresentation = nil;
     }
+}
+
+- (NSPoint)coordinatesOfPixelAtIndex:(NSInteger)index width:(NSInteger)width height:(NSInteger)height
+{
+    // origin is in lower-left to match Cocoa conventions
+    return NSMakePoint(index % width, (height - 1) - (index / width));
 }
 
 - (void)drawFractalAsync
@@ -121,9 +128,7 @@
                    dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
                    ^(size_t i){
         
-        // origin is in lower-left to match Cocoa conventions
-        NSPoint pixel = NSMakePoint(i % pixelsWide, (pixelsHigh - 1) - (i / pixelsWide));
-                       
+        NSPoint pixel = [self coordinatesOfPixelAtIndex:i width:pixelsWide height:pixelsHigh];
         NSPoint mandelbrotPoint = mandelbrot_point_for_pixel(pixel, imageSize, baseMandelbrotSpace);
         NSInteger escapeTime = mandelbrot_escape_time(mandelbrotPoint, MAX_ITERATIONS);
         UInt32 color = colors[escapeTime - 1];
