@@ -73,22 +73,6 @@
     return NSMakePoint(index % width, (height - 1) - (index / width));
 }
 
-- (void)drawFractalAsync
-{
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [self drawFractal];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self setNeedsDisplay:YES];
-        });
-    });
-}
-
-- (void)resize
-{
-    [self clearFractal];
-    [self drawFractalAsync];
-}
-
 - (NSBitmapImageRep *)fractalBitmapRepresentation {
     if (!fractalBitmapRepresentation) {
         NSRect offscreenRect = [self bounds];
@@ -106,6 +90,16 @@
         [fractalImage addRepresentation:fractalBitmapRepresentation];
     }
     return fractalBitmapRepresentation;
+}
+
+- (void)drawFractalAsync
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self drawFractal];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self setNeedsDisplay:YES];
+        });
+    });
 }
 
 - (void)drawFractal
@@ -160,6 +154,12 @@
     if (fractalImage.representations.count > 0) {
         [fractalImage drawInRect:[self bounds]];
     }
+}
+
+- (void)resize
+{
+    [self clearFractal];
+    [self drawFractalAsync];
 }
 
 - (NSRect)zoom
