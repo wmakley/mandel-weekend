@@ -25,6 +25,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         fractalImage = [[NSImage alloc] init];
+        renderLock = [[NSLock alloc] init];
         zoomX = 0.0;
         zoomY = 0.0;
         zoomScale = 1.0;
@@ -104,6 +105,7 @@
 
 - (void)drawFractal
 {
+    [renderLock lock];
     [self setBenchmark:0];
     NSTimeInterval benchStart = [NSDate timeIntervalSinceReferenceDate];
     
@@ -144,6 +146,7 @@
     
     NSTimeInterval benchEnd = [NSDate timeIntervalSinceReferenceDate];
     [self setBenchmark:(benchEnd - benchStart)];
+    [renderLock unlock];
 }
 
 - (void)drawRect:(NSRect)dirtyRect

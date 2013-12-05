@@ -16,6 +16,7 @@
     CGFloat zoomX, zoomY, zoomScale;
     NSInteger maxIterations;
     NSAffineTransform *viewTransformation;
+    NSLock *renderLock;
 }
 
 @property (assign) NSTimeInterval benchmark;
