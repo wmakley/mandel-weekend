@@ -12,8 +12,6 @@
 
 #define MAX_ITERATIONS 1000
 
-static UInt32 colorPalette[MAX_ITERATIONS];
-
 @interface MandelbrotView (Private)
 @property (readonly) NSBitmapImageRep *fractalBitmapRepresentation;
 - (void)drawFractal;
@@ -22,13 +20,17 @@ static UInt32 colorPalette[MAX_ITERATIONS];
 
 @implementation MandelbrotView
 
-@synthesize benchmark;
+@synthesize benchmark, zoomX, zoomY, zoomScale;
 
 - (id)initWithFrame:(NSRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
+        colorPalette = [[NSMutableData alloc] initWithCapacity:(MAX_ITERATIONS * sizeof(UInt32))];
         fractalImage = [[NSImage alloc] init];
+        zoomX = 0.0;
+        zoomY = 0.0;
+        zoomScale = 1.0;
         [self generateColorPalette];
     }
     return self;
@@ -36,14 +38,19 @@ static UInt32 colorPalette[MAX_ITERATIONS];
 
 - (void)generateColorPalette
 {
+    UInt32 *colors = [colorPalette mutableBytes];
     for (UInt32 i = 0; i < MAX_ITERATIONS - 1; i += 1) {
-        UInt32 color = 0x000000FF; // full alpha
-        color = color | (((MAX_ITERATIONS - i) % 256) << 8);
+        // alpha = 255
+        UInt32 color = 0x000000FF;
+        // red
+        color = color | ((UInt32)((CGFloat)i / (CGFloat)MAX_ITERATIONS * 255.0) << 24);
+        // green
         color = color | ((i % 256) << 16);
-        color = color | ((i * 10 % 256) << 24);
-        colorPalette[i] = color;
+        // blue
+        color = color | ((UInt32)((CGFloat)i / (CGFloat)MAX_ITERATIONS * 500.0) << 8);
+        colors[i] = color;
     }
-    colorPalette[MAX_ITERATIONS - 1] = 0x000000FF; // black if point doesn't escape
+    colors[MAX_ITERATIONS - 1] = 0x000000FF; // black if point doesn't escape
 }
 
 - (void)clearFractal;
@@ -100,21 +107,26 @@ static UInt32 colorPalette[MAX_ITERATIONS];
                                           graphicsContextWithBitmapImageRep:fractalRep]];
     
     unsigned char *bitmapData = [fractalRep bitmapData];
+    UInt32 *colors = [colorPalette mutableBytes];
     NSInteger pixelsWide = [fractalRep pixelsWide];
     NSInteger pixelsHigh = [fractalRep pixelsHigh];
     NSInteger totalPixels = pixelsWide * pixelsHigh;
 
     NSSize imageSize = NSMakeSize(pixelsWide, pixelsHigh);
     
+    static const NSRect baseMandelbrotSpace = {{-0.72, 0.0}, {3.5, 2.3}};
+//    NSRect mandelbrotSpace = zoom_in_on_rect(baseMandelbrotSpace, [self zoom]);
+    
     dispatch_apply(totalPixels,
                    dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
                    ^(size_t i){
         
-        NSPoint pixel = NSMakePoint(i % pixelsWide, i / pixelsWide);
-
-        NSPoint mandelbrotPoint = mandelbrot_point_for_pixel(pixel, imageSize);
+        // origin is in lower-left to match Cocoa conventions
+        NSPoint pixel = NSMakePoint(i % pixelsWide, (pixelsHigh - 1) - (i / pixelsWide));
+                       
+        NSPoint mandelbrotPoint = mandelbrot_point_for_pixel(pixel, imageSize, baseMandelbrotSpace);
         NSInteger escapeTime = mandelbrot_escape_time(mandelbrotPoint, MAX_ITERATIONS);
-        UInt32 color = colorPalette[escapeTime - 1];
+        UInt32 color = colors[escapeTime - 1];
         
         NSInteger bitmapIndex = i * 4;
         bitmapData[bitmapIndex] = color >> 24;
@@ -138,6 +150,11 @@ static UInt32 colorPalette[MAX_ITERATIONS];
     if (fractalImage.representations.count > 0) {
         [fractalImage drawInRect:[self bounds]];
     }
+}
+
+- (NSRect)zoom
+{
+    return NSMakeRect(zoomX, zoomY, zoomScale, zoomScale);
 }
 
 @end

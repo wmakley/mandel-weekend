@@ -12,12 +12,19 @@
 {
     NSBitmapImageRep *fractalBitmapRepresentation;
     NSImage *fractalImage;
+    NSMutableData *colorPalette;
+    CGFloat zoomX, zoomY, zoomScale;
+    NSAffineTransform *viewTransformation;
 }
 
 @property (assign) NSTimeInterval benchmark;
+@property (assign) CGFloat zoomX;
+@property (assign) CGFloat zoomY;
+@property (assign) CGFloat zoomScale;
 
 - (void)clearFractal;
 - (void)drawFractalAsync;
 - (void)resize;
+- (NSRect)zoom;
 
 @end
