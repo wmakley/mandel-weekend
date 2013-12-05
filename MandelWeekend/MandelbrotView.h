@@ -14,6 +14,7 @@
     NSImage *fractalImage;
     NSMutableData *colorPalette;
     CGFloat zoomX, zoomY, zoomScale;
+    NSInteger maxIterations;
     NSAffineTransform *viewTransformation;
 }
 
@@ -21,9 +22,11 @@
 @property (assign) CGFloat zoomX;
 @property (assign) CGFloat zoomY;
 @property (assign) CGFloat zoomScale;
+@property (assign) NSInteger maxIterations;
 
 - (void)clearFractal;
 - (void)drawFractalAsync;
+- (void)generateColorPalette;
 - (void)resize;
 - (NSRect)zoom;
 
