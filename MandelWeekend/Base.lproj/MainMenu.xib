@@ -779,7 +779,7 @@
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                         <connections>
-                            <action selector="refreshButtonPressed:" target="494" id="pav-pC-QaK"/>
+                            <action selector="maxIterationsChanged:" target="494" id="lf1-iu-0Pc"/>
                             <binding destination="494" name="value" keyPath="mandelbrotView.maxIterations" id="J7r-J8-Xvs"/>
                             <outlet property="formatter" destination="ILd-Ac-eMj" id="gvU-k7-k28"/>
                         </connections>

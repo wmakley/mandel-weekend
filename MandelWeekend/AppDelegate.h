@@ -15,6 +15,7 @@
 @property (assign) IBOutlet MandelbrotView *mandelbrotView;
 @property (assign) IBOutlet NSTextField *benchmarkTextField;
 
+- (IBAction)maxIterationsChanged:(id)sender;
 - (IBAction)refreshButtonPressed:(id)sender;
 
 @end

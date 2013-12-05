@@ -17,9 +17,13 @@
 
 - (IBAction)refreshButtonPressed:(id)sender
 {
-    [self.mandelbrotView clearFractal];
-    //[self.mandelbrotView setNeedsDisplay:YES];
-    [self.mandelbrotView drawFractalAsync];
+    [self.mandelbrotView resize];
+}
+
+- (IBAction)maxIterationsChanged:(id)sender
+{
+    [self.mandelbrotView generateColorPalette];
+    [self refreshButtonPressed:sender];
 }
 
 - (void)windowDidEndLiveResize:(NSNotification *)notification
