@@ -15,7 +15,6 @@
     NSMutableData *colorPalette;
     CGFloat zoomX, zoomY, zoomScale;
     NSInteger maxIterations;
-    NSAffineTransform *viewTransformation;
 
     // Used by drawFractal to prevent more than one thread from calling drawFractal at a time,
     // so benchmarks aren't affected by race conditions.
