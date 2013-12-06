@@ -119,9 +119,6 @@
     
     [bitmapLock lock];
     NSBitmapImageRep *fractalRep = [self fractalBitmapRepresentation];
-    [NSGraphicsContext saveGraphicsState];
-    [NSGraphicsContext setCurrentContext:[NSGraphicsContext
-                                          graphicsContextWithBitmapImageRep:fractalRep]];
     
     unsigned char *bitmapData = [fractalRep bitmapData];
     UInt32 *colors = [colorPalette mutableBytes];
@@ -151,7 +148,6 @@
 
     });
     
-    [NSGraphicsContext restoreGraphicsState];
     [bitmapLock unlock];
     
     NSTimeInterval benchEnd = [NSDate timeIntervalSinceReferenceDate];
