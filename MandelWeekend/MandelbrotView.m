@@ -64,10 +64,12 @@
 
 - (void)clearFractal;
 {
+    [bitmapLock lock];
     if (fractalBitmapRepresentation) {
         [fractalImage removeRepresentation:fractalBitmapRepresentation];
         fractalBitmapRepresentation = nil;
     }
+    [bitmapLock unlock];
 }
 
 - (NSPoint)coordinatesOfPixelAtIndex:(NSInteger)index width:(NSInteger)width height:(NSInteger)height
