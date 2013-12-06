@@ -688,7 +688,7 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                         <connections>
-                            <binding destination="494" name="value" keyPath="mandelbrotView.benchmark" id="Wav-6H-dBs"/>
+                            <binding destination="494" name="value" keyPath="mandelbrotView.renderTime" id="3Xg-tm-11a"/>
                             <outlet property="formatter" destination="tgr-on-YWw" id="Ilu-IV-gAU"/>
                         </connections>
                     </textField>

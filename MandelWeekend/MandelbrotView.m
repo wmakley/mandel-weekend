@@ -18,7 +18,7 @@
 
 @implementation MandelbrotView
 
-@synthesize benchmark, zoomX, zoomY, zoomScale, maxIterations;
+@synthesize renderTime, zoomX, zoomY, zoomScale, maxIterations;
 
 - (id)initWithFrame:(NSRect)frame
 {
@@ -114,8 +114,8 @@
 {
     [renderLock lock];
     [self setIsRendering:YES];
-    [self setBenchmark:0];
-    NSTimeInterval benchStart = [NSDate timeIntervalSinceReferenceDate];
+    [self setRenderTime:0];
+    NSTimeInterval startTime = [NSDate timeIntervalSinceReferenceDate];
     
     [bitmapLock lock];
     NSBitmapImageRep *fractalRep = [self fractalBitmapRepresentation];
@@ -150,8 +150,8 @@
     
     [bitmapLock unlock];
     
-    NSTimeInterval benchEnd = [NSDate timeIntervalSinceReferenceDate];
-    [self setBenchmark:(benchEnd - benchStart)];
+    NSTimeInterval endTime = [NSDate timeIntervalSinceReferenceDate];
+    [self setRenderTime:(endTime - startTime)];
     [self setIsRendering:NO];
     [renderLock unlock];
 }

@@ -25,7 +25,7 @@
     NSLock *bitmapLock;
 }
 
-@property (assign) NSTimeInterval benchmark;
+@property (assign) NSTimeInterval renderTime;
 @property (assign) CGFloat zoomX;
 @property (assign) CGFloat zoomY;
 @property (assign) CGFloat zoomScale;
