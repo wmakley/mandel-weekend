@@ -26,10 +26,12 @@
     if (self) {
         fractalImage = [[NSImage alloc] init];
         renderLock = [[NSLock alloc] init];
+        bitmapLock = [[NSLock alloc] init];
         zoomX = 0.0;
         zoomY = 0.0;
         zoomScale = 1.0;
         maxIterations = 1000;
+        self.isRendering = NO;
         [self generateColorPalette];
     }
     return self;
@@ -95,6 +97,9 @@
 
 - (void)drawFractalAsync
 {
+    if ([self isRendering]) {
+        return;
+    }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self drawFractal];
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -106,9 +111,11 @@
 - (void)drawFractal
 {
     [renderLock lock];
+    [self setIsRendering:YES];
     [self setBenchmark:0];
     NSTimeInterval benchStart = [NSDate timeIntervalSinceReferenceDate];
     
+    [bitmapLock lock];
     NSBitmapImageRep *fractalRep = [self fractalBitmapRepresentation];
     [NSGraphicsContext saveGraphicsState];
     [NSGraphicsContext setCurrentContext:[NSGraphicsContext
@@ -143,9 +150,11 @@
     });
     
     [NSGraphicsContext restoreGraphicsState];
+    [bitmapLock unlock];
     
     NSTimeInterval benchEnd = [NSDate timeIntervalSinceReferenceDate];
     [self setBenchmark:(benchEnd - benchStart)];
+    [self setIsRendering:NO];
     [renderLock unlock];
 }
 
@@ -154,9 +163,11 @@
     [super drawRect:dirtyRect];
     [[NSColor blackColor] setFill];
     NSRectFill(dirtyRect);
+    [bitmapLock lock];
     if (fractalImage.representations.count > 0) {
         [fractalImage drawInRect:[self bounds]];
     }
+    [bitmapLock unlock];
 }
 
 - (void)resize

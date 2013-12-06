@@ -16,7 +16,13 @@
     CGFloat zoomX, zoomY, zoomScale;
     NSInteger maxIterations;
     NSAffineTransform *viewTransformation;
+
+    // Used by drawFractal to prevent more than one thread from calling drawFractal at a time,
+    // so benchmarks aren't affected by race conditions.
     NSLock *renderLock;
+
+    // Lock when modifying or reading fractalBitmapRepresentation
+    NSLock *bitmapLock;
 }
 
 @property (assign) NSTimeInterval benchmark;
@@ -24,6 +30,7 @@
 @property (assign) CGFloat zoomY;
 @property (assign) CGFloat zoomScale;
 @property (assign) NSInteger maxIterations;
+@property (assign) BOOL isRendering;
 
 - (void)clearFractal;
 - (void)drawFractalAsync;
