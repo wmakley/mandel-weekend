@@ -11,7 +11,7 @@
 #import <dispatch/dispatch.h>
 
 @interface MandelbrotView (Private)
-@property (readonly) NSBitmapImageRep *fractalBitmapRepresentation;
+- (NSBitmapImageRep *)fractalBitmapRepresentation;
 - (void)drawFractal;
 - (NSPoint)coordinatesOfPixelAtIndex:(NSInteger)index width:(NSInteger)width height:(NSInteger)height;
 @end
