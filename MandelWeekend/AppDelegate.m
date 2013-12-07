@@ -12,12 +12,12 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    [self.mandelbrotView drawFractalAsync];
+    [self.mandelbrotView redrawFractal];
 }
 
 - (IBAction)refreshButtonPressed:(id)sender
 {
-    [self.mandelbrotView resize];
+    [self.mandelbrotView redrawFractal];
 }
 
 - (IBAction)maxIterationsChanged:(id)sender

@@ -15,6 +15,10 @@
     NSMutableData *colorPalette;
     CGFloat zoomX, zoomY, zoomScale;
     NSInteger maxIterations;
+    
+    NSRect dragRect;
+    
+    NSRect baseFractalSpace;
 
     // Used by drawFractal to prevent more than one thread from calling drawFractal at a time,
     // so benchmarks aren't affected by race conditions.
@@ -30,11 +34,11 @@
 @property (assign) CGFloat zoomScale;
 @property (assign) NSInteger maxIterations;
 @property (assign) BOOL isRendering;
+@property (assign) BOOL isDragging;
 
-- (void)clearFractal;
-- (void)drawFractalAsync;
-- (void)generateColorPalette;
+- (void)redrawFractal;
 - (void)resize;
+- (void)generateColorPalette;
 - (NSRect)zoom;
 
 @end
