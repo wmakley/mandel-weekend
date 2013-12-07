@@ -219,10 +219,10 @@
     NSRect currentSpace = [self zoomedFractalSpace];
     
     // cancel zoom if the box is too small
+    CGFloat newScale = [self zoomScale];
     if (dragRect.size.width > 2) {
         CGFloat dragWidth = currentSpace.size.width * dragRect.size.width / self.bounds.size.width;
-        CGFloat dragScale = dragWidth / baseFractalSpace.size.width;
-        [self setZoomScale: dragScale];
+        newScale = dragWidth / baseFractalSpace.size.width;
     }
 
     // get center of drag rect in pixel coordinates, and convert to fractal coordinates
@@ -236,6 +236,7 @@
     NSPoint translation = NSMakePoint( zoomX + (dragCenter.x - currentSpace.origin.x),
                                        zoomY + (dragCenter.y - currentSpace.origin.y) );
     
+    [self setZoomScale: newScale];
     [self setZoomX: translation.x];
     [self setZoomY: translation.y];
     [self redrawFractal];
