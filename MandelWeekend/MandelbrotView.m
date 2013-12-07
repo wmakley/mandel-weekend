@@ -9,6 +9,7 @@
 #import "MandelbrotView.h"
 #import "mandelbrot.h"
 #import <dispatch/dispatch.h>
+#import <math.h>
 
 @interface MandelbrotView (Private)
 - (CGFloat)aspectRatio;
@@ -188,8 +189,19 @@
     
     // draw drag rect if dragging
     if (self.isDragging) {
+        
+        // flip rect origin if width or height is negative
+        NSRect fixedDragRect = dragRect;
+        if (fixedDragRect.size.width < 0) {
+            fixedDragRect.origin.x += fixedDragRect.size.width;
+            fixedDragRect.size.width *= -1;
+        }
+        if (fixedDragRect.size.height < 0) {
+            fixedDragRect.origin.y += fixedDragRect.size.height;
+            fixedDragRect.size.height *= -1;
+        }
         [[NSColor whiteColor] setStroke];
-        [NSBezierPath strokeRect:dragRect];
+        [NSBezierPath strokeRect:fixedDragRect];
     }
 }
 
@@ -220,8 +232,8 @@
     
     // cancel zoom if the box is too small
     CGFloat newScale = [self zoomScale];
-    if (dragRect.size.width > 2) {
-        CGFloat dragWidth = currentSpace.size.width * dragRect.size.width / self.bounds.size.width;
+    if (fabs(dragRect.size.width) > 2) {
+        CGFloat dragWidth = currentSpace.size.width * fabs(dragRect.size.width) / self.bounds.size.width;
         newScale = dragWidth / baseFractalSpace.size.width;
     }
 
@@ -260,6 +272,13 @@
     
     dragRect.size.width = location.x - dragRect.origin.x;
     dragRect.size.height = dragRect.size.width / [self aspectRatio];
+    
+    if (dragRect.size.width < 0 && location.y > dragRect.origin.y) {
+        dragRect.size.height *= -1;
+    }
+    else if (dragRect.size.width > 0 && location.y < dragRect.origin.y) {
+        dragRect.size.height *= -1;
+    }
     
     [self setIsDragging:YES];
     [self setNeedsDisplay:YES];
