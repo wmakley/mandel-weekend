@@ -31,4 +31,8 @@
     [self.mandelbrotView resize];
 }
 
+- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication {
+    return YES;
+}
+
 @end
