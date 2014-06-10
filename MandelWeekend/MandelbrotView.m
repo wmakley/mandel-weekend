@@ -20,6 +20,7 @@
 - (NSPoint)convertScreenPointToFractalPoint:(NSPoint)screenPoint;
 - (NSRect)zoomedFractalSpace;
 - (void)zoomToDragRect;
+- (UInt32)colorForEscapeTime:(NSInteger)escapeTime maxIterations:(NSInteger)maxIterations;
 @end
 
 @implementation MandelbrotView
@@ -67,6 +68,12 @@
         colors[i] = color;
     }
     colors[totalColors - 1] = 0x000000FF; // black if point doesn't escape
+}
+
+- (UInt32)colorForEscapeTime:(NSInteger)escapeTime maxIterations:(NSInteger)maxIterations
+{
+    UInt32 *colors = [colorPalette mutableBytes];
+    return colors[escapeTime - 1];
 }
 
 - (CGFloat)aspectRatio
@@ -139,7 +146,6 @@
     NSBitmapImageRep *fractalRep = [self fractalBitmapRepresentation];
     
     unsigned char *bitmapData = [fractalRep bitmapData];
-    UInt32 *colors = [colorPalette mutableBytes];
     NSInteger pixelsWide = [fractalRep pixelsWide];
     NSInteger pixelsHigh = [fractalRep pixelsHigh];
     NSInteger totalPixels = pixelsWide * pixelsHigh;
@@ -154,7 +160,7 @@
         NSPoint pixel = [self coordinatesOfPixelAtIndex:i width:pixelsWide height:pixelsHigh];
         NSPoint mandelbrotPoint = mandelbrot_point_for_pixel(pixel, imageSize, fractalSpace);
         NSInteger escapeTime = mandelbrot_escape_time(mandelbrotPoint, maxIterations);
-        UInt32 color = colors[escapeTime - 1];
+        UInt32 color = [self colorForEscapeTime:escapeTime maxIterations:maxIterations];
         
         NSInteger bitmapIndex = i * 4;
         bitmapData[bitmapIndex] = color >> 24;
