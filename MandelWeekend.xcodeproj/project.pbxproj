@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3D15C7D21ABCC69100C71A52 /* ColorPalette.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D15C7D11ABCC69100C71A52 /* ColorPalette.m */; };
 		3D690EA918479287006267E5 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D690EA818479287006267E5 /* Cocoa.framework */; };
 		3D690EB318479287006267E5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D690EB118479287006267E5 /* InfoPlist.strings */; };
 		3D690EB518479287006267E5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D690EB418479287006267E5 /* main.m */; };
@@ -33,6 +34,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3D15C7D01ABCC63800C71A52 /* ColorPalette.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ColorPalette.h; sourceTree = "<group>"; };
+		3D15C7D11ABCC69100C71A52 /* ColorPalette.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorPalette.m; sourceTree = "<group>"; };
 		3D690EA518479287006267E5 /* MandelWeekend.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MandelWeekend.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D690EA818479287006267E5 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		3D690EAB18479287006267E5 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -130,6 +133,8 @@
 				3D690EDD1847C89F006267E5 /* mandelbrot.m */,
 				3D690EE11848E64C006267E5 /* MandelbrotView.h */,
 				3D690EE21848E64C006267E5 /* MandelbrotView.m */,
+				3D15C7D01ABCC63800C71A52 /* ColorPalette.h */,
+				3D15C7D11ABCC69100C71A52 /* ColorPalette.m */,
 			);
 			path = MandelWeekend;
 			sourceTree = "<group>";
@@ -264,6 +269,7 @@
 			files = (
 				3D690EDE1847C89F006267E5 /* mandelbrot.m in Sources */,
 				3D690EBC18479287006267E5 /* AppDelegate.m in Sources */,
+				3D15C7D21ABCC69100C71A52 /* ColorPalette.m in Sources */,
 				3D690EE31848E64C006267E5 /* MandelbrotView.m in Sources */,
 				3D690EB518479287006267E5 /* main.m in Sources */,
 			);
@@ -396,7 +402,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MandelWeekend/MandelWeekend-Prefix.pch";
 				INFOPLIST_FILE = "MandelWeekend/MandelWeekend-Info.plist";

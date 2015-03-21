@@ -7,16 +7,19 @@
 //
 
 #import <Cocoa/Cocoa.h>
+@class ColorPalette;
 
 @interface MandelbrotView : NSView <NSWindowDelegate>
 {
     NSBitmapImageRep *fractalBitmapRepresentation;
     NSImage *fractalImage;
-    NSMutableData *colorPalette;
+    ColorPalette *colorPalette;
     CGFloat zoomX, zoomY, zoomScale;
     NSInteger maxIterations;
     
     NSRect dragRect;
+    
+    NSAffineTransform *viewToFractal;
     
     NSRect baseFractalSpace;
 
@@ -38,7 +41,6 @@
 
 - (void)redrawFractal;
 - (void)resize;
-- (void)generateColorPalette;
 - (NSRect)zoom;
 
 @end

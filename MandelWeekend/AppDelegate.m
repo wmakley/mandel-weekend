@@ -22,7 +22,6 @@
 
 - (IBAction)maxIterationsChanged:(id)sender
 {
-    [self.mandelbrotView generateColorPalette];
     [self refreshButtonPressed:sender];
 }
 

@@ -7,6 +7,7 @@
 //
 
 #import "MandelbrotView.h"
+#import "ColorPalette.h"
 #import "mandelbrot.h"
 #import <dispatch/dispatch.h>
 #import <math.h>
@@ -20,7 +21,7 @@
 - (NSPoint)convertScreenPointToFractalPoint:(NSPoint)screenPoint;
 - (NSRect)zoomedFractalSpace;
 - (void)zoomToDragRect;
-- (UInt32)colorForEscapeTime:(NSInteger)escapeTime maxIterations:(NSInteger)maxIterations;
+- (UInt32)colorForEscapeTime:(NSInteger)escapeTime;
 @end
 
 @implementation MandelbrotView
@@ -40,40 +41,14 @@
         maxIterations = 1000;
         baseFractalSpace = NSMakeRect(-0.72, 0.0, 3.5, 2.3);
         self.isRendering = NO;
-        [self generateColorPalette];
+        colorPalette = [[ColorPalette alloc] initWithMaxIterations:maxIterations];
     }
     return self;
 }
 
 - (void)generateColorPalette
 {
-    NSUInteger totalColors = self.maxIterations;
-    NSUInteger byteLength = totalColors * sizeof(UInt32);
-    if (!colorPalette) {
-        colorPalette = [[NSMutableData alloc] initWithCapacity:byteLength];
-    }
-    else if (colorPalette.length != byteLength) {
-        [colorPalette setLength:byteLength];
-    }
-    UInt32 *colors = [colorPalette mutableBytes];
-    for (UInt32 i = 0; i < totalColors; i += 1) {
-        // alpha = 255
-        UInt32 color = 0x000000FF;
-        // red
-        color = color | ((UInt32)((CGFloat)i / (CGFloat)totalColors * 255.0) << 24);
-        // green
-        color = color | ((UInt32)((CGFloat)i / (CGFloat)totalColors * 100.0) << 16);
-        // blue
-        color = color | ((i % 256) << 8);
-        colors[i] = color;
-    }
-    colors[totalColors - 1] = 0x000000FF; // black if point doesn't escape
-}
-
-- (UInt32)colorForEscapeTime:(NSInteger)escapeTime maxIterations:(NSInteger)maxIterations
-{
-    UInt32 *colors = [colorPalette mutableBytes];
-    return colors[escapeTime - 1];
+    [colorPalette setMaxIterations:self.maxIterations];
 }
 
 - (CGFloat)aspectRatio
@@ -160,7 +135,7 @@
         NSPoint pixel = [self coordinatesOfPixelAtIndex:i width:pixelsWide height:pixelsHigh];
         NSPoint mandelbrotPoint = mandelbrot_point_for_pixel(pixel, imageSize, fractalSpace);
         NSInteger escapeTime = mandelbrot_escape_time(mandelbrotPoint, maxIterations);
-        UInt32 color = [self colorForEscapeTime:escapeTime maxIterations:maxIterations];
+        UInt32 color = [colorPalette colorForEscapeTime:escapeTime];
         
         NSInteger bitmapIndex = i * 4;
         bitmapData[bitmapIndex] = color >> 24;
@@ -214,6 +189,7 @@
 - (void)redrawFractal
 {
     [self clearFractal];
+    [colorPalette setMaxIterations:self.maxIterations];
     [self drawFractalAsync];
 }
 
