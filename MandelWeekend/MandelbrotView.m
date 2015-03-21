@@ -263,7 +263,7 @@
 - (void)mouseDown:(NSEvent *)theEvent
 {
     if ([self isRendering]) return;
-    NSPoint location = [self convertPointFromBase:[theEvent locationInWindow]];
+    NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     
     dragRect = NSMakeRect(location.x, location.y, 0, 0);
     
@@ -274,7 +274,7 @@
 - (void)mouseDragged:(NSEvent *)theEvent
 {
     if ([self isRendering]) return;
-    NSPoint location = [self convertPointFromBase:[theEvent locationInWindow]];
+    NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     
     dragRect.size.width = location.x - dragRect.origin.x;
     dragRect.size.height = dragRect.size.width / [self aspectRatio];
