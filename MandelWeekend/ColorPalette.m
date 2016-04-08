@@ -14,12 +14,12 @@
 
 @implementation ColorPalette
 
-- (id)init
+- (instancetype)init
 {
     return [self initWithMaxIterations:1000];
 }
 
-- (id)initWithMaxIterations:(NSInteger)maxIterations
+- (instancetype)initWithMaxIterations:(NSInteger)maxIterations
 {
     self = [super init];
     if (self) {

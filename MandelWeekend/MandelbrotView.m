@@ -28,7 +28,7 @@
 
 @synthesize renderTime, zoomX, zoomY, zoomScale, maxIterations;
 
-- (id)initWithFrame:(NSRect)frame
+- (instancetype)initWithFrame:(NSRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
@@ -39,6 +39,24 @@
         zoomY = 0.0;
         zoomScale = 1.0;
         maxIterations = 1000;
+        baseFractalSpace = NSMakeRect(-0.72, 0.0, 3.5, 2.3);
+        self.isRendering = NO;
+        colorPalette = [[ColorPalette alloc] initWithMaxIterations:maxIterations];
+    }
+    return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    if (self) {
+        fractalImage = [coder decodeObjectForKey:@"fractalImage"];
+        renderLock = [[NSLock alloc] init];
+        bitmapLock = [[NSLock alloc] init];
+        zoomX = [coder decodeDoubleForKey:@"zoomX"];
+        zoomY = [coder decodeDoubleForKey:@"zoomY"];
+        zoomScale = [coder decodeDoubleForKey:@"zoomScale"];
+        maxIterations = [coder decodeIntegerForKey:@"maxIterations"];
         baseFractalSpace = NSMakeRect(-0.72, 0.0, 3.5, 2.3);
         self.isRendering = NO;
         colorPalette = [[ColorPalette alloc] initWithMaxIterations:maxIterations];

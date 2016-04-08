@@ -14,7 +14,7 @@
     NSInteger _maxIterations;
 }
 
-- (id)initWithMaxIterations:(NSInteger)maxIterations;
+- (instancetype)initWithMaxIterations:(NSInteger)maxIterations;
 
 - (NSInteger)maxIterations;
 - (void)setMaxIterations:(NSInteger)maxIterations;

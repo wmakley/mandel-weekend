@@ -31,6 +31,9 @@
     NSLock *bitmapLock;
 }
 
+- (instancetype)initWithFrame:(NSRect)frame NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithCoder:(NSCoder *)coder NS_DESIGNATED_INITIALIZER;
+
 @property (assign) NSTimeInterval renderTime;
 @property (assign) CGFloat zoomX;
 @property (assign) CGFloat zoomY;
