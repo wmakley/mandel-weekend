@@ -150,9 +150,13 @@
                    dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
                    ^(size_t i){
         
+        // get coordinates of pixel i
         NSPoint pixel = [self coordinatesOfPixelAtIndex:i width:pixelsWide height:pixelsHigh];
+        // transform pixel coordinates to mandelbrot coordinates
         NSPoint mandelbrotPoint = mandelbrot_point_for_pixel(pixel, imageSize, fractalSpace);
+        // calculate the escape time
         NSInteger escapeTime = mandelbrot_escape_time(mandelbrotPoint, maxIterations);
+        // look up the color
         UInt32 color = [colorPalette colorForEscapeTime:escapeTime];
         
         NSInteger bitmapIndex = i * 4;
