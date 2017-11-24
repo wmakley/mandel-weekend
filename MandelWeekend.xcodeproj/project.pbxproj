@@ -8,9 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		3D15C7D21ABCC69100C71A52 /* ColorPalette.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D15C7D11ABCC69100C71A52 /* ColorPalette.m */; };
-		3D3CD9871FC73D5B0018775A /* GLMandelbrotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3CD9861FC73D5B0018775A /* GLMandelbrotView.m */; };
 		3D3CD9891FC7458A0018775A /* mandelbrot.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 3D3CD9881FC7458A0018775A /* mandelbrot.fsh */; };
 		3D3CD98D1FC860750018775A /* mandelbrot.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 3D3CD98C1FC860750018775A /* mandelbrot.vsh */; };
+		3D3CD9911FC89B360018775A /* GLMandelbrotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3CD9901FC89B360018775A /* GLMandelbrotView.m */; };
 		3D690EA918479287006267E5 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D690EA818479287006267E5 /* Cocoa.framework */; };
 		3D690EB318479287006267E5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D690EB118479287006267E5 /* InfoPlist.strings */; };
 		3D690EB518479287006267E5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D690EB418479287006267E5 /* main.m */; };
@@ -38,10 +38,10 @@
 /* Begin PBXFileReference section */
 		3D15C7D01ABCC63800C71A52 /* ColorPalette.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ColorPalette.h; sourceTree = "<group>"; };
 		3D15C7D11ABCC69100C71A52 /* ColorPalette.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorPalette.m; sourceTree = "<group>"; };
-		3D3CD9851FC73D5B0018775A /* GLMandelbrotView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLMandelbrotView.h; sourceTree = "<group>"; };
-		3D3CD9861FC73D5B0018775A /* GLMandelbrotView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GLMandelbrotView.m; sourceTree = "<group>"; };
 		3D3CD9881FC7458A0018775A /* mandelbrot.fsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = mandelbrot.fsh; sourceTree = "<group>"; };
 		3D3CD98C1FC860750018775A /* mandelbrot.vsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = mandelbrot.vsh; sourceTree = "<group>"; };
+		3D3CD98F1FC89B360018775A /* GLMandelbrotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLMandelbrotView.h; sourceTree = "<group>"; };
+		3D3CD9901FC89B360018775A /* GLMandelbrotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLMandelbrotView.m; sourceTree = "<group>"; };
 		3D690EA518479287006267E5 /* MandelWeekend.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MandelWeekend.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D690EA818479287006267E5 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		3D690EAB18479287006267E5 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -146,6 +146,8 @@
 				3D690EDD1847C89F006267E5 /* mandelbrot.m */,
 				3D690EE11848E64C006267E5 /* MandelbrotView.h */,
 				3D690EE21848E64C006267E5 /* MandelbrotView.m */,
+				3D3CD98F1FC89B360018775A /* GLMandelbrotView.h */,
+				3D3CD9901FC89B360018775A /* GLMandelbrotView.m */,
 				3D15C7D01ABCC63800C71A52 /* ColorPalette.h */,
 				3D15C7D11ABCC69100C71A52 /* ColorPalette.m */,
 			);
@@ -291,6 +293,7 @@
 				3D690EDE1847C89F006267E5 /* mandelbrot.m in Sources */,
 				3D690EBC18479287006267E5 /* AppDelegate.m in Sources */,
 				3D15C7D21ABCC69100C71A52 /* ColorPalette.m in Sources */,
+				3D3CD9911FC89B360018775A /* GLMandelbrotView.m in Sources */,
 				3D690EE31848E64C006267E5 /* MandelbrotView.m in Sources */,
 				3D690EB518479287006267E5 /* main.m in Sources */,
 			);
