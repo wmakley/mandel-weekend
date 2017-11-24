@@ -10,6 +10,14 @@
 #import "ColorPalette.h"
 #import "mandelbrot.h"
 
+// g for global
+static const GLfloat g_vertexBufferData[] = {
+    -1.0f, -1.0f, 0.0f, // lower left
+    1.0f, -1.0f, 0.0f, // lower right
+    1.0f,  1.0f, 0.0f, // top right
+    -1.0f, 1.0f, 0.0f // top left
+};
+
 @interface GLMandelbrotView (Private)
 - (NSPoint)convertScreenPointToFractalPoint:(NSPoint)screenPoint;
 - (NSRect)zoomedFractalSpace;
@@ -28,39 +36,66 @@
         _baseFractalSpace = NSMakeRect(-0.72, 0.0, 3.5, 2.3);
         _isRendering = NO;
         _colorPalette = [[ColorPalette alloc] initWithMaxIterations:_maxIterations];
+        
+        _vertexArrayID = 0;
+        _vertexBuffer = 0;
+        _vertexShaderID = 0;
+        _fragmentShaderID = 0;
+        [self setWantsBestResolutionOpenGLSurface:YES];
     }
     return self;
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
+    // prevent certain state changes during rendering
     [self setIsRendering:YES];
-    [super drawRect:dirtyRect];
     
-    glBegin(GL_QUADS);
-    glTexCoord2f(0, 0);
-    glVertex2f(-1, -1);
-    glTexCoord2f(1, 0);
-    glVertex2f(1, -1);
-    glTexCoord2f(1, 1);
-    glVertex2f(1, 1);
-    glTexCoord2f(0, 1);
-    glVertex2f(-1, 1);
-    glEnd();
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
+    glVertexAttribPointer(
+        0,              // attribute 0. No particular reason for 0, but must match the layout in the shader.
+        4,              // size
+        GL_FLOAT,       // type
+        GL_FALSE,       // normalized?
+        0,              // stride
+        (void*)0        // array buffer offset
+    );
+    glDrawArrays(GL_QUADS, 0, 4); // Starting from vertex 0; 3 vertices total -> 1 triangle
+    glDisableVertexAttribArray(0);
+    
+    glFlush();
     
     [self setIsRendering:NO];
 }
 
-- (void)resize {
-    // TODO
-}
-
 - (void)prepareOpenGL {
-    // setup OpenGL here
+    glGenVertexArraysAPPLE(1, &_vertexArrayID);
+    glBindVertexArrayAPPLE(_vertexArrayID);
+    
+    glGenBuffers(1, &_vertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertexBufferData), g_vertexBufferData, GL_STATIC_DRAW);
+    
+    _vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
+    _fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
+    
+    glClearColor(0, 0, 0, 0);
 }
 
 - (CGFloat)aspectRatio {
     NSRect bounds = [self bounds];
     return bounds.size.width / bounds.size.height;
+}
+
+- (void)redrawFractal {
+    [self setNeedsDisplay:YES];
+    // TODO
+}
+
+- (void)resize {
+    // TODO
 }
 
 - (NSRect)zoom {

@@ -7,7 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import <OpenGL/OpenGL.h>
+#include <OpenGL/gl.h>
 @class ColorPalette;
 
 @interface GLMandelbrotView : NSOpenGLView
@@ -17,6 +17,12 @@
 //    NSInteger maxIterations;
     NSRect _baseFractalSpace;
     NSRect _dragRect;
+    
+    GLuint _vertexArrayID;
+    GLuint _vertexBuffer;
+    GLuint _vertexShaderID;
+    GLuint _fragmentShaderID;
+    GLuint _program;
 }
 
 @property (assign) NSTimeInterval renderTime;
@@ -27,6 +33,7 @@
 @property (assign) BOOL isRendering;
 @property (assign) BOOL isDragging;
 
+- (void)redrawFractal;
 - (CGFloat)aspectRatio;
 - (NSRect)zoom;
 
