@@ -23,7 +23,6 @@
 		3D690ED318479287006267E5 /* MandelWeekendTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D690ED218479287006267E5 /* MandelWeekendTests.m */; };
 		3D690EDE1847C89F006267E5 /* mandelbrot.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D690EDD1847C89F006267E5 /* mandelbrot.m */; };
 		3D690EE31848E64C006267E5 /* MandelbrotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D690EE21848E64C006267E5 /* MandelbrotView.m */; };
-		3DDC9FE21E2E8C4100211D3C /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DDC9FE11E2E8C4100211D3C /* OpenGL.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,7 +64,6 @@
 		3D690EDD1847C89F006267E5 /* mandelbrot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mandelbrot.m; sourceTree = "<group>"; };
 		3D690EE11848E64C006267E5 /* MandelbrotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MandelbrotView.h; sourceTree = "<group>"; };
 		3D690EE21848E64C006267E5 /* MandelbrotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MandelbrotView.m; sourceTree = "<group>"; };
-		3DDC9FE11E2E8C4100211D3C /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,7 +71,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3DDC9FE21E2E8C4100211D3C /* OpenGL.framework in Frameworks */,
 				3D690EA918479287006267E5 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -120,7 +117,6 @@
 		3D690EA718479287006267E5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				3DDC9FE11E2E8C4100211D3C /* OpenGL.framework */,
 				3D690EA818479287006267E5 /* Cocoa.framework */,
 				3D690EAA18479287006267E5 /* Other Frameworks */,
 			);
@@ -152,8 +148,6 @@
 				3D690EE21848E64C006267E5 /* MandelbrotView.m */,
 				3D15C7D01ABCC63800C71A52 /* ColorPalette.h */,
 				3D15C7D11ABCC69100C71A52 /* ColorPalette.m */,
-				3D3CD9851FC73D5B0018775A /* GLMandelbrotView.h */,
-				3D3CD9861FC73D5B0018775A /* GLMandelbrotView.m */,
 			);
 			path = MandelWeekend;
 			sourceTree = "<group>";
@@ -232,7 +226,7 @@
 		3D690E9D18479287006267E5 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0820;
+				LastUpgradeCheck = 0910;
 				ORGANIZATIONNAME = "William Makley";
 				TargetAttributes = {
 					3D690EA418479287006267E5 = {
@@ -297,7 +291,6 @@
 				3D690EDE1847C89F006267E5 /* mandelbrot.m in Sources */,
 				3D690EBC18479287006267E5 /* AppDelegate.m in Sources */,
 				3D15C7D21ABCC69100C71A52 /* ColorPalette.m in Sources */,
-				3D3CD9871FC73D5B0018775A /* GLMandelbrotView.m in Sources */,
 				3D690EE31848E64C006267E5 /* MandelbrotView.m in Sources */,
 				3D690EB518479287006267E5 /* main.m in Sources */,
 			);
@@ -364,14 +357,20 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -409,14 +408,20 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
