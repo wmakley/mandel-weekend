@@ -13,11 +13,12 @@
 #import <math.h>
 
 @interface MandelbrotView (Private)
+- (CGFloat)aspectRatio;
+- (NSBitmapImageRep *)fractalBitmapRepresentationOfSize:(NSSize)size;
 - (void)startRendering;
 - (void)endRendering;
-- (CGFloat)aspectRatio;
-- (NSBitmapImageRep *)fractalBitmapRepresentation;
-- (void)drawFractal;
+- (void)drawFractalWithSize:(NSSize)fractalSize;
+- (void)drawFractalOnBackgroundThread;
 - (NSPoint)coordinatesOfPixelAtIndex:(NSInteger)index width:(NSInteger)width height:(NSInteger)height;
 - (NSPoint)convertScreenPointToFractalPoint:(NSPoint)screenPoint;
 - (NSRect)zoomedFractalSpace;
@@ -97,19 +98,18 @@
     return NSMakePoint(index % width, (height - 1) - (index / width));
 }
 
-- (NSBitmapImageRep *)fractalBitmapRepresentation {
+- (NSBitmapImageRep *)fractalBitmapRepresentationOfSize:(NSSize)size {
     if (!fractalBitmapRepresentation) {
-        NSRect offscreenRect = [self bounds];
         fractalBitmapRepresentation = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:nil
-                                                             pixelsWide:offscreenRect.size.width
-                                                             pixelsHigh:offscreenRect.size.height
+                                                             pixelsWide:size.width
+                                                             pixelsHigh:size.height
                                                           bitsPerSample:8
                                                         samplesPerPixel:4
                                                                hasAlpha:YES
                                                                isPlanar:NO
                                                          colorSpaceName:NSCalibratedRGBColorSpace
                                                            bitmapFormat:0
-                                                            bytesPerRow:(4 * offscreenRect.size.width)
+                                                            bytesPerRow:(4 * size.width)
                                                            bitsPerPixel:32];
         [fractalImage addRepresentation:fractalBitmapRepresentation];
     }
@@ -130,11 +130,14 @@
     [renderLock unlock];
 }
 
-- (void)drawFractal
+/**
+ * Draw fractal on current thread.
+ */
+- (void)drawFractalWithSize:(NSSize)fractalSize
 {
     [self startRendering];
     [bitmapLock lock];
-    NSBitmapImageRep *fractalRep = [self fractalBitmapRepresentation];
+    NSBitmapImageRep *fractalRep = [self fractalBitmapRepresentationOfSize:fractalSize];
     
     unsigned char *bitmapData = [fractalRep bitmapData];
     NSInteger pixelsWide = [fractalRep pixelsWide];
@@ -202,12 +205,26 @@
     }
 }
 
+/**
+ * Called externally if fractal needs to be redrawn.
+ */
 - (void)redrawFractal
 {
     [self clearFractal];
     [colorPalette setMaxIterations:self.maxIterations];
-    [self drawFractal];
-    [self setNeedsDisplay:YES];
+    [self drawFractalOnBackgroundThread];
+}
+
+- (void)drawFractalOnBackgroundThread
+{
+    if ([self isRendering]) return;
+    NSSize fractalSize = self.bounds.size;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self drawFractalWithSize:fractalSize];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self setNeedsDisplay:YES];
+        });
+   });
 }
 
 - (void)resize
