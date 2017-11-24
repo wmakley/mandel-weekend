@@ -11,6 +11,7 @@
 		3D3CD9891FC7458A0018775A /* mandelbrot.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 3D3CD9881FC7458A0018775A /* mandelbrot.fsh */; };
 		3D3CD98D1FC860750018775A /* mandelbrot.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 3D3CD98C1FC860750018775A /* mandelbrot.vsh */; };
 		3D3CD9911FC89B360018775A /* GLMandelbrotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3CD9901FC89B360018775A /* GLMandelbrotView.m */; };
+		3D3CD9931FC89B7B0018775A /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D3CD9921FC89B7B0018775A /* OpenGL.framework */; };
 		3D690EA918479287006267E5 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D690EA818479287006267E5 /* Cocoa.framework */; };
 		3D690EB318479287006267E5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D690EB118479287006267E5 /* InfoPlist.strings */; };
 		3D690EB518479287006267E5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D690EB418479287006267E5 /* main.m */; };
@@ -42,6 +43,7 @@
 		3D3CD98C1FC860750018775A /* mandelbrot.vsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = mandelbrot.vsh; sourceTree = "<group>"; };
 		3D3CD98F1FC89B360018775A /* GLMandelbrotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLMandelbrotView.h; sourceTree = "<group>"; };
 		3D3CD9901FC89B360018775A /* GLMandelbrotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLMandelbrotView.m; sourceTree = "<group>"; };
+		3D3CD9921FC89B7B0018775A /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = ../../../../../System/Library/Frameworks/OpenGL.framework; sourceTree = "<group>"; };
 		3D690EA518479287006267E5 /* MandelWeekend.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MandelWeekend.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D690EA818479287006267E5 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		3D690EAB18479287006267E5 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -72,6 +74,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D690EA918479287006267E5 /* Cocoa.framework in Frameworks */,
+				3D3CD9931FC89B7B0018775A /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -89,8 +92,8 @@
 		3D3CD98E1FC884340018775A /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
-				3D3CD9881FC7458A0018775A /* mandelbrot.fsh */,
 				3D3CD98C1FC860750018775A /* mandelbrot.vsh */,
+				3D3CD9881FC7458A0018775A /* mandelbrot.fsh */,
 			);
 			name = Shaders;
 			sourceTree = "<group>";
@@ -117,6 +120,7 @@
 		3D690EA718479287006267E5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3D3CD9921FC89B7B0018775A /* OpenGL.framework */,
 				3D690EA818479287006267E5 /* Cocoa.framework */,
 				3D690EAA18479287006267E5 /* Other Frameworks */,
 			);

@@ -62,7 +62,7 @@ static const GLfloat g_vertexBufferData[] = {
         0,              // stride
         (void*)0        // array buffer offset
     );
-    glDrawArrays(GL_QUADS, 0, 4); // Starting from vertex 0; 3 vertices total -> 1 triangle
+    glDrawArrays(GL_QUADS, 0, 4); // Starting from vertex 0; 4 vertices total -> 1 quad
     glDisableVertexAttribArray(0);
     
     glFlush();
