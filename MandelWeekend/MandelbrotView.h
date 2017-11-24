@@ -16,6 +16,7 @@
     ColorPalette *colorPalette;
     CGFloat zoomX, zoomY, zoomScale;
     NSInteger maxIterations;
+    NSTimeInterval _startTime;
     
     NSRect dragRect;
     

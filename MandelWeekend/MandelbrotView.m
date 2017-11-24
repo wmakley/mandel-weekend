@@ -13,10 +13,11 @@
 #import <math.h>
 
 @interface MandelbrotView (Private)
+- (void)startRendering;
+- (void)endRendering;
 - (CGFloat)aspectRatio;
 - (NSBitmapImageRep *)fractalBitmapRepresentation;
 - (void)drawFractal;
-- (void)drawFractalAsync;
 - (NSPoint)coordinatesOfPixelAtIndex:(NSInteger)index width:(NSInteger)width height:(NSInteger)height;
 - (NSPoint)convertScreenPointToFractalPoint:(NSPoint)screenPoint;
 - (NSRect)zoomedFractalSpace;
@@ -115,26 +116,23 @@
     return fractalBitmapRepresentation;
 }
 
-- (void)drawFractalAsync
-{
-    if ([self isRendering]) {
-        return;
-    }
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [self drawFractal];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self setNeedsDisplay:YES];
-        });
-    });
+- (void)startRendering {
+    [renderLock lock];
+    [self setIsRendering:YES];
+    [self setRenderTime:0];
+    _startTime = [NSDate timeIntervalSinceReferenceDate];
+}
+
+- (void)endRendering {
+    NSTimeInterval endTime = [NSDate timeIntervalSinceReferenceDate];
+    [self setRenderTime:(endTime - _startTime)];
+    [self setIsRendering:NO];
+    [renderLock unlock];
 }
 
 - (void)drawFractal
 {
-    [renderLock lock];
-    [self setIsRendering:YES];
-    [self setRenderTime:0];
-    NSTimeInterval startTime = [NSDate timeIntervalSinceReferenceDate];
-    
+    [self startRendering];
     [bitmapLock lock];
     NSBitmapImageRep *fractalRep = [self fractalBitmapRepresentation];
     
@@ -168,11 +166,7 @@
     });
     
     [bitmapLock unlock];
-    
-    NSTimeInterval endTime = [NSDate timeIntervalSinceReferenceDate];
-    [self setRenderTime:(endTime - startTime)];
-    [self setIsRendering:NO];
-    [renderLock unlock];
+    [self endRendering];
 }
 
 - (void)drawRect:(NSRect)dirtyRect
@@ -212,7 +206,8 @@
 {
     [self clearFractal];
     [colorPalette setMaxIterations:self.maxIterations];
-    [self drawFractalAsync];
+    [self drawFractal];
+    [self setNeedsDisplay:YES];
 }
 
 - (void)resize
