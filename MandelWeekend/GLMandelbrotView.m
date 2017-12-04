@@ -21,13 +21,14 @@ static const GLfloat g_vertexBufferData[] = {
 };
 
 @interface GLMandelbrotView (Private)
-- (NSPoint)convertScreenPointToFractalPoint:(NSPoint)screenPoint;
-- (NSRect)zoomedFractalSpace;
 - (NSSize)screenSizeInPixels;
-- (void)zoomToDragRect;
-- (void)sendTextureData;
 
+- (void)zoomToDragRect;
+
+- (void)sendTextureData;
 - (void)setScreenSizeUniform:(NSSize)screenSize;
+- (void)setCenterUniformX:(GLdouble)x Y:(GLdouble)y;
+- (void)setScaleUniform:(GLdouble)scale;
 - (void)setMaxIterationsUniform:(GLint)maxIterations;
 @end
 
@@ -56,7 +57,6 @@ static const GLfloat g_vertexBufferData[] = {
         _zoomY = 0.0;
         _zoomScale = 1.0;
         _maxIterations = [GLMandelbrotView defaultMaxIterations];
-        _baseFractalSpace = NSMakeRect(-0.72, 0.0, 3.5, 2.3);
         _isRendering = NO;
         _texture = [[GradientTexture alloc] initWithWidth:256];
         _programID = 0;
@@ -163,8 +163,8 @@ static const GLfloat g_vertexBufferData[] = {
 
     glProgramUniform1i(_programID, texLoc, 0); // uniform sampler1D tex - always points to texture 0;
     [self setScreenSizeUniform:screenSize];
-    glProgramUniform2f(_programID, _centerUniformLoc, 0.0f, 0.0f);
-    glProgramUniform1f(_programID, _scaleUniformLoc, 1.0f);
+    [self setCenterUniformX:_zoomX Y:_zoomY];
+    [self setScaleUniform:_zoomScale];
     [self setMaxIterationsUniform:(GLint)_maxIterations];
 }
 
@@ -189,12 +189,33 @@ static const GLfloat g_vertexBufferData[] = {
 
 - (void)redrawFractal {
     [self setNeedsDisplay:YES];
-    // TODO
 }
 
-// Send the current screen size to OpenGL;
-- (void)setScreenSizeUniform:(NSSize)screenSize {
-    glProgramUniform2f(_programID, _screenSizeUniformLoc, screenSize.width, screenSize.height);
+- (void)setZoomX:(CGFloat)zoomX {
+    @synchronized (self) {
+        if (zoomX != _zoomX) {
+            _zoomX = zoomX;
+            [self setCenterUniformX:_zoomX Y:_zoomY];
+        }
+    }
+}
+
+- (void)setZoomY:(CGFloat)zoomY {
+    @synchronized (self) {
+        if (zoomY != _zoomY) {
+            _zoomY = zoomY;
+            [self setCenterUniformX:_zoomX Y:_zoomY];
+        }
+    }
+}
+
+- (void)setZoomScale:(CGFloat)zoomScale {
+    @synchronized (self) {
+        if (zoomScale != _zoomScale) {
+            _zoomScale = zoomScale;
+            [self setScaleUniform:zoomScale];
+        }
+    }
 }
 
 - (void)setMaxIterations:(NSInteger)maxIterations {
@@ -211,6 +232,19 @@ static const GLfloat g_vertexBufferData[] = {
         }
     }
     // Don't re-render in case other things changed
+}
+
+
+- (void)setScreenSizeUniform:(NSSize)screenSize {
+    glProgramUniform2d(_programID, _screenSizeUniformLoc, screenSize.width, screenSize.height);
+}
+
+- (void)setCenterUniformX:(GLdouble)x Y:(GLdouble)y {
+    glProgramUniform2d(_programID, _centerUniformLoc, x, y);
+}
+
+- (void)setScaleUniform:(GLdouble)scale {
+    glProgramUniform1d(_programID, _scaleUniformLoc, scale);
 }
 
 - (void)setMaxIterationsUniform:(GLint)maxIterations {
@@ -232,16 +266,8 @@ static const GLfloat g_vertexBufferData[] = {
     [self setNeedsDisplay:YES];
 }
 
-- (NSRect)zoom {
-    return NSMakeRect(_zoomX, _zoomY, _zoomScale, _zoomScale);
-}
-
 - (void)zoomToDragRect {
     // TODO
-}
-
-- (NSRect)zoomedFractalSpace {
-    return zoom_in_on_rect(_baseFractalSpace, [self zoom]);
 }
 
 - (void)mouseDown:(NSEvent *)theEvent

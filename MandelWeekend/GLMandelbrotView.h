@@ -14,9 +14,6 @@
 @interface GLMandelbrotView : NSOpenGLView
 {
     GradientTexture *_texture;
-//    CGFloat zoomX, zoomY, zoomScale;
-//    NSInteger maxIterations;
-    NSRect _baseFractalSpace;
     NSRect _dragRect;
     
     GLuint _vertexArrayID;
@@ -35,10 +32,20 @@
 + (NSInteger)defaultMaxIterations;
 
 @property (assign) NSTimeInterval renderTime;
-@property (assign) CGFloat zoomX;
-@property (assign) CGFloat zoomY;
-@property (assign) CGFloat zoomScale;
+
+// GUI properties
+@property (readonly) CGFloat zoomX;
+- (void)setZoomX:(CGFloat)zoomX;
+
+@property (readonly) CGFloat zoomY;
+- (void)setZoomY:(CGFloat)zoomY;
+
+@property (readonly) CGFloat zoomScale;
+- (void)setZoomScale:(CGFloat)zoomScale;
+
 @property (readonly) NSInteger maxIterations;
+- (void)setMaxIterations:(NSInteger)maxIterations;
+
 @property (assign) BOOL isRendering;
 @property (assign) BOOL isDragging;
 
