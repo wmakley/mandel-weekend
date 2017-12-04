@@ -32,6 +32,9 @@ static const GLfloat g_vertexBufferData[] = {
 - (void)setTranslationUniformX:(GLdouble)x Y:(GLdouble)y;
 - (void)setScaleUniform:(GLdouble)scale;
 - (void)setMaxIterationsUniform:(GLint)maxIterations;
+
+- (NSRect)baseGraphTransformationsAsRect;
+- (NSRect)zoomedGraphTransformationsAsRect;
 @end
 
 @implementation GLMandelbrotView
@@ -310,33 +313,53 @@ static const GLfloat g_vertexBufferData[] = {
     // 4. Set scale
     
     
-    
     // TODO: track all the fractal transformations built into the shader,
     // and do the complex space transformations outside of the shader.
-//    NSRect currentSpace = [self zoomedFractalSpace];
+    NSRect baseFractalSpace = [self baseGraphTransformationsAsRect];
+    NSRect currentSpace = [self zoomedGraphTransformationsAsRect];
     
     // cancel zoom if the box is too small
-//    CGFloat newScale = [self zoomScale];
-//    if (fabs(_dragRect.size.width) > 2) {
-//        CGFloat dragWidth = currentSpace.size.width * fabs(_dragRect.size.width) / self.bounds.size.width;
-//        newScale = dragWidth / baseFractalSpace.size.width;
-//    }
+    CGFloat newScale = [self zoomScale];
+    if (fabs(_dragRect.size.width) > 2) {
+        CGFloat dragWidth = currentSpace.size.width * fabs(_dragRect.size.width) / self.bounds.size.width;
+        newScale = dragWidth / baseFractalSpace.size.width;
+    }
     
     // get center of drag rect in pixel coordinates, and convert to fractal coordinates
-//    NSPoint dragCenterPx = NSMakePoint( _dragRect.origin.x + (_dragRect.size.width / 2.0),
-//                                        _dragRect.origin.y + (_dragRect.size.height / 2.0) );
+    NSPoint dragCenterPx = NSMakePoint( _dragRect.origin.x + (_dragRect.size.width / 2.0),
+                                        _dragRect.origin.y + (_dragRect.size.height / 2.0) );
     
-//    NSPoint dragCenter = [self convertScreenPointToFractalPoint:dragCenterPx];
+    NSPoint dragCenter = [self convertScreenPointToFractalPoint:dragCenterPx];
     
     // Calculate new zoom translation by taking different between this point and fractal space translation
     // and adding it to the old zoom translation.
-//    NSPoint translation = NSMakePoint( _zoomX + (dragCenter.x - currentSpace.origin.x),
-//                                       _zoomY + (dragCenter.y - currentSpace.origin.y) );
-//
-//    [self setZoomScale: newScale];
-//    [self setZoomX: translation.x];
-//    [self setZoomY: translation.y];
+    NSPoint translation = NSMakePoint( _zoomX + (dragCenter.x - currentSpace.origin.x),
+                                       _zoomY + (dragCenter.y - currentSpace.origin.y) );
+
+    [self setZoomScale: newScale];
+    [self setZoomX: translation.x Y: translation.y];
     [self redrawFractal];
+}
+
+- (NSPoint)convertScreenPointToFractalPoint:(NSPoint)screenPoint
+{
+    return mandelbrot_point_for_pixel(screenPoint, [self bounds].size, [self zoomedGraphTransformationsAsRect]);
+}
+
+- (NSRect)zoomAsRect
+{
+    return NSMakeRect(_zoomX, _zoomY, _zoomScale, _zoomScale);
+}
+
+- (NSRect)baseGraphTransformationsAsRect {
+    return NSMakeRect(BASE_TRANSLATION.x, BASE_TRANSLATION.y, BASE_GRAPH_SIZE.x, BASE_GRAPH_SIZE.y);
+}
+
+// apply the current user zoom to the base translations
+- (NSRect)zoomedGraphTransformationsAsRect
+{
+    return zoom_in_on_rect([self baseGraphTransformationsAsRect],
+                           [self zoomAsRect]);
 }
 
 - (void)mouseDown:(NSEvent *)theEvent
