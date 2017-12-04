@@ -12,7 +12,7 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    [self.mandelbrotView redrawFractal];
+    [self.mandelbrotView resize];
 }
 
 - (IBAction)refreshButtonPressed:(id)sender
@@ -32,6 +32,10 @@
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication {
     return YES;
+}
+
+- (void)applicationWillTerminate:(NSNotification *)notification {
+    [self.mandelbrotView cleanUpOpenGL];
 }
 
 @end

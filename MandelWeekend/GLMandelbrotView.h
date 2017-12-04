@@ -7,12 +7,13 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#include <OpenGL/gl.h>
-@class ColorPalette;
+#include <OpenGL/gl3.h>
+#import "GradientTexture.h"
+#import "Shader.h"
 
 @interface GLMandelbrotView : NSOpenGLView
 {
-    ColorPalette *_colorPalette;
+    GradientTexture *_texture;
 //    CGFloat zoomX, zoomY, zoomScale;
 //    NSInteger maxIterations;
     NSRect _baseFractalSpace;
@@ -20,21 +21,36 @@
     
     GLuint _vertexArrayID;
     GLuint _vertexBuffer;
-    GLuint _vertexShaderID;
-    GLuint _fragmentShaderID;
-    GLuint _program;
+    GLuint _textureID;
+    Shader *_vertexShader;
+    Shader *_fragmentShader;
+    GLuint _programID;
+    
+    GLint _screenSizeUniformLoc;
+    GLint _centerUniformLoc;
+    GLint _scaleUniformLoc;
+    GLint _maxIterationsUniformLoc;
 }
+
++ (NSInteger)defaultMaxIterations;
 
 @property (assign) NSTimeInterval renderTime;
 @property (assign) CGFloat zoomX;
 @property (assign) CGFloat zoomY;
 @property (assign) CGFloat zoomScale;
-@property (assign) NSInteger maxIterations;
+@property (readonly) NSInteger maxIterations;
 @property (assign) BOOL isRendering;
 @property (assign) BOOL isDragging;
 
+// Call to re-render the fractal
 - (void)redrawFractal;
+// Call when the view has been resized to explicitly trigger a render
+- (void)resize;
+
 - (CGFloat)aspectRatio;
 - (NSRect)zoom;
+
+// Call before the application terminates to cleanup OpenGL resources
+- (void)cleanUpOpenGL;
 
 @end

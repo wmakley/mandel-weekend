@@ -652,12 +652,12 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <rect key="contentRect" x="0.0" y="353" width="965" height="551"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
-            <view key="contentView" id="372">
-                <rect key="frame" x="0.0" y="0.0" width="965" height="551"/>
+            <view key="contentView" misplaced="YES" id="372">
+                <rect key="frame" x="0.0" y="0.0" width="980" height="551"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="57n-nC-htd" customClass="GLMandelbrotView">
-                        <rect key="frame" x="0.0" y="55" width="965" height="496"/>
+                        <rect key="frame" x="0.0" y="55" width="980" height="496"/>
                     </customView>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Bvt-tN-pi0">
                         <rect key="frame" x="18" y="20" width="88" height="17"/>
@@ -671,7 +671,7 @@
                         </textFieldCell>
                     </textField>
                     <button verticalHuggingPriority="744" translatesAutoresizingMaskIntoConstraints="NO" id="MJz-Xl-Fls">
-                        <rect key="frame" x="869" y="10" width="87" height="32"/>
+                        <rect key="frame" x="884" y="10" width="87" height="32"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="75" id="d9K-Lh-QoJ"/>
                         </constraints>
@@ -684,7 +684,7 @@
                         </connections>
                     </button>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Tre-yU-mMg">
-                        <rect key="frame" x="113" y="20" width="122" height="17"/>
+                        <rect key="frame" x="113" y="20" width="57" height="17"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Seconds" id="NYb-l5-kHr">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -695,73 +695,8 @@
                             <outlet property="formatter" destination="tgr-on-YWw" id="Ilu-IV-gAU"/>
                         </connections>
                     </textField>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="AfY-vI-O5p">
-                        <rect key="frame" x="248" y="20" width="57" height="17"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="53" id="Lze-GC-tLJ"/>
-                        </constraints>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Zoom X:" id="sAI-26-nk7">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5jl-QN-Bc4">
-                        <rect key="frame" x="311" y="17" width="80" height="22"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="80" id="IdL-Ne-VPY"/>
-                        </constraints>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="FcH-Vx-kDc">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                        <connections>
-                            <action selector="refreshButtonPressed:" target="494" id="Jh9-eF-jMc"/>
-                            <binding destination="494" name="value" keyPath="mandelbrotView.zoomX" id="YaN-M6-BC5"/>
-                            <outlet property="formatter" destination="tgr-on-YWw" id="KHZ-w5-bYM"/>
-                        </connections>
-                    </textField>
-                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="SIe-XQ-4bF">
-                        <rect key="frame" x="422" y="17" width="80" height="22"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="80" id="lcj-hy-p77"/>
-                        </constraints>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="9Aj-0Z-pEg">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                        <connections>
-                            <action selector="refreshButtonPressed:" target="494" id="Za0-ap-Flh"/>
-                            <binding destination="494" name="value" keyPath="mandelbrotView.zoomY" id="kg8-3W-3Nh"/>
-                            <outlet property="formatter" destination="tgr-on-YWw" id="q6a-gi-NUc"/>
-                        </connections>
-                    </textField>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jcS-2V-5Ch">
-                        <rect key="frame" x="399" y="20" width="17" height="17"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="13" id="iHe-bY-cxR"/>
-                        </constraints>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Y:" id="040-tU-3gA">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sjk-jY-7e3">
-                        <rect key="frame" x="510" y="20" width="46" height="17"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="42" id="T6x-Rg-IL2"/>
-                        </constraints>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Scale:" id="PwH-Ub-MRo">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="LoR-A8-HK5">
-                        <rect key="frame" x="671" y="20" width="65" height="17"/>
+                        <rect key="frame" x="686" y="20" width="65" height="17"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="61" id="oJ5-ha-PAv"/>
                         </constraints>
@@ -772,7 +707,7 @@
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Pd8-l6-78t">
-                        <rect key="frame" x="745" y="17" width="96" height="22"/>
+                        <rect key="frame" x="760" y="17" width="96" height="22"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="96" id="Dap-Xl-sjN"/>
                         </constraints>
@@ -787,10 +722,75 @@
                             <outlet property="formatter" destination="ILd-Ac-eMj" id="gvU-k7-k28"/>
                         </connections>
                     </textField>
-                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="yFi-Zt-qho">
-                        <rect key="frame" x="557" y="17" width="80" height="22"/>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AfY-vI-O5p">
+                        <rect key="frame" x="215" y="20" width="57" height="17"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="80" id="hKB-KF-Kx8"/>
+                            <constraint firstAttribute="width" constant="53" id="Lze-GC-tLJ"/>
+                        </constraints>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Zoom X:" id="sAI-26-nk7">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5jl-QN-Bc4">
+                        <rect key="frame" x="278" y="17" width="80" height="22"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="100" id="IdL-Ne-VPY"/>
+                        </constraints>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="FcH-Vx-kDc">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                        <connections>
+                            <action selector="refreshButtonPressed:" target="494" id="Jh9-eF-jMc"/>
+                            <binding destination="494" name="value" keyPath="mandelbrotView.zoomX" id="YaN-M6-BC5"/>
+                            <outlet property="formatter" destination="tgr-on-YWw" id="KHZ-w5-bYM"/>
+                        </connections>
+                    </textField>
+                    <textField verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SIe-XQ-4bF">
+                        <rect key="frame" x="389" y="17" width="80" height="22"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="100" id="lcj-hy-p77"/>
+                        </constraints>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="9Aj-0Z-pEg">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                        <connections>
+                            <action selector="refreshButtonPressed:" target="494" id="Za0-ap-Flh"/>
+                            <binding destination="494" name="value" keyPath="mandelbrotView.zoomY" id="kg8-3W-3Nh"/>
+                            <outlet property="formatter" destination="tgr-on-YWw" id="q6a-gi-NUc"/>
+                        </connections>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jcS-2V-5Ch">
+                        <rect key="frame" x="366" y="20" width="17" height="17"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="13" id="iHe-bY-cxR"/>
+                        </constraints>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Y:" id="040-tU-3gA">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sjk-jY-7e3">
+                        <rect key="frame" x="477" y="20" width="46" height="17"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="42" id="T6x-Rg-IL2"/>
+                        </constraints>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Scale:" id="PwH-Ub-MRo">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yFi-Zt-qho">
+                        <rect key="frame" x="524" y="17" width="141" height="22"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="120" id="hKB-KF-Kx8"/>
                         </constraints>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="LwD-C4-wNx">
                             <font key="font" metaFont="system"/>
@@ -837,6 +837,7 @@
             <connections>
                 <outlet property="delegate" destination="494" id="BCn-yh-jvw"/>
             </connections>
+            <point key="canvasLocation" x="139.5" y="161.5"/>
         </window>
         <customObject id="494" customClass="AppDelegate">
             <connections>
