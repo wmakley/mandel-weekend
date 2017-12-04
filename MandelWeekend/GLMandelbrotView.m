@@ -8,6 +8,7 @@
 
 #import "GLMandelbrotView.h"
 #import "mandelbrot.h"
+#import <math.h>
 
 // g for global. vertices for 2 triangles making a quad.
 static const GLfloat g_vertexBufferData[] = {
@@ -20,6 +21,7 @@ static const GLfloat g_vertexBufferData[] = {
     1.0f,  1.0f, 0.0f // top right
 };
 
+
 @interface GLMandelbrotView (Private)
 - (NSSize)screenSizeInPixels;
 
@@ -27,7 +29,7 @@ static const GLfloat g_vertexBufferData[] = {
 
 - (void)sendTextureData;
 - (void)setScreenSizeUniform:(NSSize)screenSize;
-- (void)setCenterUniformX:(GLdouble)x Y:(GLdouble)y;
+- (void)setTranslationUniformX:(GLdouble)x Y:(GLdouble)y;
 - (void)setScaleUniform:(GLdouble)scale;
 - (void)setMaxIterationsUniform:(GLint)maxIterations;
 @end
@@ -36,6 +38,14 @@ static const GLfloat g_vertexBufferData[] = {
 
 + (NSInteger)defaultMaxIterations {
     return 100;
+}
+
++ (GLKVector2)defaultGraphSize {
+    return GLKVector2Make(2.6, 2.3);
+}
+
++ (GLKVector2)defaultTranslation {
+    return GLKVector2Make(-0.75, 0.0);
 }
 
 
@@ -59,15 +69,17 @@ static const GLfloat g_vertexBufferData[] = {
         _maxIterations = [GLMandelbrotView defaultMaxIterations];
         _isRendering = NO;
         _texture = [[GradientTexture alloc] initWithWidth:256];
-        _programID = 0;
-        _textureID = 0;
+        NSLog(@"starting programID: %u", _programID);
+        
+        BASE_GRAPH_SIZE = [GLMandelbrotView defaultGraphSize];
+        BASE_TRANSLATION = [GLMandelbrotView defaultTranslation];
     }
     return self;
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
     // set this flag so certain messages can be ignored during rendering
-    [self setIsRendering:YES];
+//    [self setIsRendering:YES];
     glClear(GL_COLOR_BUFFER_BIT);
     
     glEnableVertexAttribArray(0);
@@ -84,7 +96,7 @@ static const GLfloat g_vertexBufferData[] = {
     glDisableVertexAttribArray(0);
     
     glFlush();
-    [self setIsRendering:NO];
+//    [self setIsRendering:NO];
 }
 
 - (void)prepareOpenGL {
@@ -155,15 +167,20 @@ static const GLfloat g_vertexBufferData[] = {
     [self sendTextureData];
     
     GLint texLoc = glGetUniformLocation(_programID, "tex");
+    GLint graphSizeLoc = glGetUniformLocation(_programID, "graphSize");
     _screenSizeUniformLoc = glGetUniformLocation(_programID, "screenSize");
-    _centerUniformLoc = glGetUniformLocation(_programID, "center");
+    _translateUniformLoc = glGetUniformLocation(_programID, "translate");
     _scaleUniformLoc = glGetUniformLocation(_programID, "scale");
     _maxIterationsUniformLoc = glGetUniformLocation(_programID, "iter");
 //    NSLog(@"tex: %d, center: %d, scale: %d, iter: %d", texLoc, centerLoc, scaleLoc, iterLoc);
 
-    glProgramUniform1i(_programID, texLoc, 0); // uniform sampler1D tex - always points to texture 0;
+    // uniform sampler1D tex - always points to texture 0;
+    glProgramUniform1i(_programID, texLoc, 0);
+    // Base scaling of the graph never changes, but we need to know it
+    // both here and in the shader.
+    glProgramUniform2d(_programID, graphSizeLoc, BASE_GRAPH_SIZE.x, BASE_GRAPH_SIZE.y);
     [self setScreenSizeUniform:screenSize];
-    [self setCenterUniformX:_zoomX Y:_zoomY];
+    [self setTranslationUniformX:_zoomX Y:_zoomY];
     [self setScaleUniform:_zoomScale];
     [self setMaxIterationsUniform:(GLint)_maxIterations];
 }
@@ -191,11 +208,12 @@ static const GLfloat g_vertexBufferData[] = {
     [self setNeedsDisplay:YES];
 }
 
+
 - (void)setZoomX:(CGFloat)zoomX {
     @synchronized (self) {
         if (zoomX != _zoomX) {
             _zoomX = zoomX;
-            [self setCenterUniformX:_zoomX Y:_zoomY];
+            [self setTranslationUniformX:_zoomX Y:_zoomY];
         }
     }
 }
@@ -204,7 +222,25 @@ static const GLfloat g_vertexBufferData[] = {
     @synchronized (self) {
         if (zoomY != _zoomY) {
             _zoomY = zoomY;
-            [self setCenterUniformX:_zoomX Y:_zoomY];
+            [self setTranslationUniformX:_zoomX Y:_zoomY];
+        }
+    }
+}
+
+// Set both X and Y at the same time if both changed to avoid 2 re-draws
+- (void)setZoomX:(CGFloat)zoomX Y:(CGFloat)zoomY {
+    @synchronized (self) {
+        BOOL changed = NO;
+        if (zoomX != _zoomX) {
+            _zoomX = zoomX;
+            changed = YES;
+        }
+        if (zoomY != _zoomY) {
+            _zoomY = zoomY;
+            changed = YES;
+        }
+        if (changed) {
+            [self setTranslationUniformX:_zoomX Y:_zoomY];
         }
     }
 }
@@ -219,11 +255,13 @@ static const GLfloat g_vertexBufferData[] = {
 }
 
 - (void)setMaxIterations:(NSInteger)maxIterations {
-    NSInteger clamped = maxIterations;
-    if (clamped < 1) {
+    NSInteger clamped;
+    if (maxIterations < 1) {
         clamped = 1;
-    } else if (clamped > 20000) {
+    } else if (maxIterations > 20000) {
         clamped = 20000;
+    } else {
+        clamped = maxIterations;
     }
     @synchronized (self) {
         if (clamped != _maxIterations) {
@@ -231,7 +269,6 @@ static const GLfloat g_vertexBufferData[] = {
             [self setMaxIterationsUniform:(GLint)_maxIterations];
         }
     }
-    // Don't re-render in case other things changed
 }
 
 
@@ -239,8 +276,8 @@ static const GLfloat g_vertexBufferData[] = {
     glProgramUniform2d(_programID, _screenSizeUniformLoc, screenSize.width, screenSize.height);
 }
 
-- (void)setCenterUniformX:(GLdouble)x Y:(GLdouble)y {
-    glProgramUniform2d(_programID, _centerUniformLoc, x, y);
+- (void)setTranslationUniformX:(GLdouble)x Y:(GLdouble)y {
+    glProgramUniform2d(_programID, _translateUniformLoc, BASE_TRANSLATION.x + x, y);
 }
 
 - (void)setScaleUniform:(GLdouble)scale {
@@ -267,7 +304,39 @@ static const GLfloat g_vertexBufferData[] = {
 }
 
 - (void)zoomToDragRect {
-    // TODO
+    // 1. Find the center of the rectangle in complex coordinates
+    // 2. No zoom for boxes of < 2 pixels, just translate and return
+    // 3. Figure out the new scale, by proportion of selected screen against overall screen
+    // 4. Set scale
+    
+    
+    
+    // TODO: track all the fractal transformations built into the shader,
+    // and do the complex space transformations outside of the shader.
+//    NSRect currentSpace = [self zoomedFractalSpace];
+    
+    // cancel zoom if the box is too small
+//    CGFloat newScale = [self zoomScale];
+//    if (fabs(_dragRect.size.width) > 2) {
+//        CGFloat dragWidth = currentSpace.size.width * fabs(_dragRect.size.width) / self.bounds.size.width;
+//        newScale = dragWidth / baseFractalSpace.size.width;
+//    }
+    
+    // get center of drag rect in pixel coordinates, and convert to fractal coordinates
+//    NSPoint dragCenterPx = NSMakePoint( _dragRect.origin.x + (_dragRect.size.width / 2.0),
+//                                        _dragRect.origin.y + (_dragRect.size.height / 2.0) );
+    
+//    NSPoint dragCenter = [self convertScreenPointToFractalPoint:dragCenterPx];
+    
+    // Calculate new zoom translation by taking different between this point and fractal space translation
+    // and adding it to the old zoom translation.
+//    NSPoint translation = NSMakePoint( _zoomX + (dragCenter.x - currentSpace.origin.x),
+//                                       _zoomY + (dragCenter.y - currentSpace.origin.y) );
+//
+//    [self setZoomScale: newScale];
+//    [self setZoomX: translation.x];
+//    [self setZoomY: translation.y];
+    [self redrawFractal];
 }
 
 - (void)mouseDown:(NSEvent *)theEvent

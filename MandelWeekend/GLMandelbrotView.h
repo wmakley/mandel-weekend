@@ -7,7 +7,8 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#include <OpenGL/gl3.h>
+#import <OpenGL/gl3.h>
+#import <GLKit/GLKit.h>
 #import "GradientTexture.h"
 #import "Shader.h"
 
@@ -15,6 +16,11 @@
 {
     GradientTexture *_texture;
     NSRect _dragRect;
+    
+    NSPoint _fractalTranslation;
+    
+    GLKVector2 BASE_TRANSLATION;
+    GLKVector2 BASE_GRAPH_SIZE;
     
     GLuint _vertexArrayID;
     GLuint _vertexBuffer;
@@ -24,12 +30,14 @@
     GLuint _programID;
     
     GLint _screenSizeUniformLoc;
-    GLint _centerUniformLoc;
+    GLint _translateUniformLoc;
     GLint _scaleUniformLoc;
     GLint _maxIterationsUniformLoc;
 }
 
 + (NSInteger)defaultMaxIterations;
++ (GLKVector2)defaultGraphSize;
++ (GLKVector2)defaultTranslation;
 
 @property (assign) NSTimeInterval renderTime;
 
@@ -39,6 +47,9 @@
 
 @property (readonly) CGFloat zoomY;
 - (void)setZoomY:(CGFloat)zoomY;
+
+// set both at the same time to avoid multiple redraws
+- (void)setZoomX:(CGFloat)zoomX Y:(CGFloat)zoomY;
 
 @property (readonly) CGFloat zoomScale;
 - (void)setZoomScale:(CGFloat)zoomScale;
@@ -55,7 +66,6 @@
 - (void)resize;
 
 - (CGFloat)aspectRatio;
-- (NSRect)zoom;
 
 // Call before the application terminates to cleanup OpenGL resources
 - (void)cleanUpOpenGL;
