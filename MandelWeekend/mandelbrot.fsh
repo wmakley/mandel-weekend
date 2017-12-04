@@ -9,15 +9,14 @@ uniform int iter;
 out vec4 color;
 
 void main() {
-    // convert pixel to proportion of 1.0
+    // convert pixel to a proportion of 1.0
     dvec2 pixel;
     pixel.x = gl_FragCoord.x / screenSize.x;
     pixel.y = gl_FragCoord.y / screenSize.y;
     
     // The mandelbrot set is about 2.6 wide and 2.3 tall on the complex plane,
-    // and extends more into the negative x, so we build in some
-    // scaling and translation of the user specified
-    // scale and translate.
+    // and extends more into the negative x, so we hardcode some base
+    // scaling and translation.
     dvec2 fractalScale, fractalTranslate;
     
     fractalScale.x = 2.6 * scale;
@@ -26,6 +25,7 @@ void main() {
     fractalTranslate.x = -0.75 + center.x;
     fractalTranslate.y = center.y;
     
+    // old code for reference
 //    CGFloat x_offset = mandelbrot_space.origin.x - (mandelbrot_space.size.width / 2);
 //    CGFloat x = ((pixel.x / screen.width) * mandelbrot_space.size.width) + x_offset;
 //
@@ -33,6 +33,7 @@ void main() {
 //    CGFloat y = pixel.y / screen.height * mandelbrot_space.size.height + y_offset;
 
     dvec2 z, c;
+    // apply scaling and translation to our pixel to get its final complex coordinates
     c.x = pixel.x * fractalScale.x - (fractalScale.x / 2.0) + fractalTranslate.x;
     c.y = pixel.y * fractalScale.y - (fractalScale.y / 2.0) + fractalTranslate.y;
 
@@ -48,6 +49,8 @@ void main() {
     }
 
 //    color = texture(tex, (i == iter ? 0.0 : float(i)) / float(iter));
+    
+    // texture sampling not working yet, just generate a color
     float escapeTime = float(i) / float(iter);
     color = vec4(
                  1.0 - escapeTime, // max == 0

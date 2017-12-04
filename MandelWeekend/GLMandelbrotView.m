@@ -258,7 +258,7 @@ static const GLfloat g_vertexBufferData[] = {
     return NSMakeSize(backingPixelWidth, backingPixelHeight);
 }
 
-// Called externally when the view may have resized
+// Called externally or internally when the view may have resized
 - (void)resize {
     NSSize screenSize = [self screenSizeInPixels];
     glViewport(0, 0, screenSize.width, screenSize.height);
