@@ -213,47 +213,49 @@ static const GLfloat g_vertexBufferData[] = {
 
 
 - (void)setZoomX:(CGFloat)zoomX {
-    @synchronized (self) {
-        if (zoomX != _zoomX) {
-            _zoomX = zoomX;
-            [self setTranslationUniformX:_zoomX Y:_zoomY];
-        }
+    if (zoomX != _zoomX) {
+        [self willChangeValueForKey:@"zoomX"];
+        _zoomX = zoomX;
+        [self setTranslationUniformX:_zoomX Y:_zoomY];
+        [self didChangeValueForKey:@"zoomX"];
     }
 }
 
 - (void)setZoomY:(CGFloat)zoomY {
-    @synchronized (self) {
-        if (zoomY != _zoomY) {
-            _zoomY = zoomY;
-            [self setTranslationUniformX:_zoomX Y:_zoomY];
-        }
+    if (zoomY != _zoomY) {
+        [self willChangeValueForKey:@"zoomY"];
+        _zoomY = zoomY;
+        [self setTranslationUniformX:_zoomX Y:_zoomY];
+        [self didChangeValueForKey:@"zoomY"];
     }
 }
 
 // Set both X and Y at the same time if both changed to avoid 2 re-draws
 - (void)setZoomX:(CGFloat)zoomX Y:(CGFloat)zoomY {
-    @synchronized (self) {
-        BOOL changed = NO;
-        if (zoomX != _zoomX) {
-            _zoomX = zoomX;
-            changed = YES;
-        }
-        if (zoomY != _zoomY) {
-            _zoomY = zoomY;
-            changed = YES;
-        }
-        if (changed) {
-            [self setTranslationUniformX:_zoomX Y:_zoomY];
-        }
+    BOOL changed = NO;
+    if (zoomX != _zoomX) {
+        [self willChangeValueForKey:@"zoomX"];
+        _zoomX = zoomX;
+        [self didChangeValueForKey:@"zoomX"];
+        changed = YES;
+    }
+    if (zoomY != _zoomY) {
+        [self willChangeValueForKey:@"zoomY"];
+        _zoomY = zoomY;
+        [self didChangeValueForKey:@"zoomY"];
+        changed = YES;
+    }
+    if (changed) {
+        [self setTranslationUniformX:_zoomX Y:_zoomY];
     }
 }
 
 - (void)setZoomScale:(CGFloat)zoomScale {
-    @synchronized (self) {
-        if (zoomScale != _zoomScale) {
-            _zoomScale = zoomScale;
-            [self setScaleUniform:zoomScale];
-        }
+    if (zoomScale != _zoomScale) {
+        [self willChangeValueForKey:@"zoomScale"];
+        _zoomScale = zoomScale;
+        [self didChangeValueForKey:@"zoomScale"];
+        [self setScaleUniform:zoomScale];
     }
 }
 
@@ -266,11 +268,12 @@ static const GLfloat g_vertexBufferData[] = {
     } else {
         clamped = maxIterations;
     }
-    @synchronized (self) {
-        if (clamped != _maxIterations) {
-            _maxIterations = clamped;
-            [self setMaxIterationsUniform:(GLint)_maxIterations];
-        }
+
+    if (clamped != _maxIterations) {
+        [self willChangeValueForKey:@"maxIterations"];
+        _maxIterations = clamped;
+        [self didChangeValueForKey:@"maxIterations"];
+        [self setMaxIterationsUniform:(GLint)_maxIterations];
     }
 }
 

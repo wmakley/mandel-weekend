@@ -46,6 +46,7 @@ static const GLsizei DEFAULT_WIDTH = 256;
     }
     GLfloat *colors = [_texture mutableBytes];
     for (GLsizei i = 0; i < width; i += 1) {
+        // Old integer-based algorithm:
         // alpha = 255
 //        UInt32 color = 0x000000FF;
         // red
@@ -55,7 +56,6 @@ static const GLsizei DEFAULT_WIDTH = 256;
         // blue
 //        color = color | ((i % 256) << 8);
         
-        // test red gradient
         GLfloat red = (GLfloat)i / width_f;
         GLfloat green = (CGFloat)i / width_f / 2.5f;
         GLfloat blue = (GLfloat)(i % 256);
@@ -65,7 +65,6 @@ static const GLsizei DEFAULT_WIDTH = 256;
         colors[pointerOffset + 1] = green;
         colors[pointerOffset + 2] = blue;
     }
-//    colors[totalColors - 1] = 0x000000FF; // black if point doesn't escape
 }
 
 - (void)setWidth:(GLsizei)width

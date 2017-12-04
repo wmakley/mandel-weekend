@@ -31,14 +31,18 @@ void main() {
         z.y = y;
     }
 
-//    color = texture(tex, (i == iter ? 0.0 : float(i)) / float(iter));
+    if (i == iter) {
+        color = vec4(0.0, 0.0, 0.0, 0.0);
+    } else {
+        color = texture(tex, float(i) / float(iter));
+    }
     
     // texture sampling not working yet, just generate a color
-    float escapeTime = float(i) / float(iter);
-    color = vec4(
-                 1.0 - escapeTime, // max == 0
-                 1.0 - escapeTime, // max == 0
-                 0.5,
-                 1.0
-    );
+//    float escapeTime = float(i) / float(iter);
+//    color = vec4(
+//                 1.0 - escapeTime, // max == 0
+//                 1.0 - escapeTime, // max == 0
+//                 0.5,
+//                 1.0
+//    );
 }
