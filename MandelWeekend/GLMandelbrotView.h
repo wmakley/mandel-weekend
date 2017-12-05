@@ -58,6 +58,7 @@
 
 @property (assign) BOOL isRendering;
 @property (assign) BOOL isDragging;
+@property (nonatomic, assign) BOOL isLiveResizing;
 
 // Call to re-render the fractal
 - (void)redrawFractal;

@@ -36,6 +36,8 @@ static const GLfloat g_vertexBufferData[] = {
 
 - (NSRect)baseGraphTransformationsAsRect;
 - (NSRect)zoomedGraphTransformationsAsRect;
+
+- (GLint)maxIterationsDuringLiveResize;
 @end
 
 @implementation GLMandelbrotView
@@ -67,7 +69,6 @@ static const GLfloat g_vertexBufferData[] = {
     self = [super initWithFrame:frame pixelFormat:pf];
     if (self) {
         [self setWantsBestResolutionOpenGLSurface:YES]; // enable retina support
-        
 //        [self setWantsLayer:YES]; // for over-laying the drag rect, but currently broken
         
         _zoomX = 0.0;
@@ -75,6 +76,7 @@ static const GLfloat g_vertexBufferData[] = {
         _zoomScale = 1.0;
         _maxIterations = [GLMandelbrotView defaultMaxIterations];
         _isRendering = NO;
+        _isLiveResizing = NO;
         _texture = [[GradientTexture alloc] init];
         
         _baseGraphSize = [GLMandelbrotView defaultGraphSize];
@@ -110,7 +112,7 @@ static const GLfloat g_vertexBufferData[] = {
     
     // block until rendering is done
     glFinish();
-    
+
     NSTimeInterval endTime = [NSDate timeIntervalSinceReferenceDate];
     [self setRenderTime:endTime - startTime];
     [self setIsRendering:NO];
@@ -119,15 +121,33 @@ static const GLfloat g_vertexBufferData[] = {
 - (void)reshape {
 //    NSLog(@"reshape");
     // Just do live resizing for now
-    [self resize];
+    NSSize screenSize = [self screenSizeInPixels];
+    glViewport(0, 0, screenSize.width, screenSize.height);
+    [self setScreenSizeUniform:screenSize];
 }
 
-// Called externally or internally when the view may have resized
+- (void)setIsLiveResizing:(BOOL)isLiveResizing {
+    // Speed up the shader if the window is resizing
+    if (_isLiveResizing != isLiveResizing) {
+        _isLiveResizing = isLiveResizing;
+        [self setMaxIterationsUniform:
+            isLiveResizing
+                ? [self maxIterationsDuringLiveResize]
+                : (GLint)_maxIterations];
+        [self setNeedsDisplay:YES];
+    }
+}
+
+- (GLint)maxIterationsDuringLiveResize {
+    return 100;
+}
+
+// Called externally when the view may have resized
 - (void)resize {
     NSSize screenSize = [self screenSizeInPixels];
     glViewport(0, 0, screenSize.width, screenSize.height);
     [self setScreenSizeUniform:screenSize];
-//    [self setNeedsDisplay:YES];
+    [self setNeedsDisplay:YES]; // uncomment if this is called externally
 }
 
 - (void)prepareOpenGL {
@@ -214,6 +234,13 @@ static const GLfloat g_vertexBufferData[] = {
     [self setTranslationUniformX:_zoomX Y:_zoomY];
     [self setScaleUniform:_zoomScale];
     [self setMaxIterationsUniform:(GLint)_maxIterations];
+    
+    // Set up render-to-texture
+//    glGenFramebuffers(1, &_framebufferID);
+//    glGenTextures(1, &_renderedTextureID);
+//
+//    glBindTexture(GL_TEXTURE_2D, _renderedTextureID);
+//    glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, 1024, 768, 0,GL_RGB, GL_UNSIGNED_BYTE, 0);
 }
 
 // Needs to be called any time the texture changes

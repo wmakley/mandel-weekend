@@ -26,8 +26,13 @@
     [self refreshButtonPressed:sender];
 }
 
+- (void)windowWillStartLiveResize:(NSNotification *)notification {
+    [_mandelbrotView setIsLiveResizing:YES];
+}
+
 - (void)windowDidEndLiveResize:(NSNotification *)notification
 {
+    [_mandelbrotView setIsLiveResizing:NO];
     // we are using live resizing for now, since there is no way to disable it
 //    [_mandelbrotView resize];
 }
