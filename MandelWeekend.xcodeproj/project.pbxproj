@@ -26,6 +26,8 @@
 		3D690ED318479287006267E5 /* MandelWeekendTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D690ED218479287006267E5 /* MandelWeekendTests.m */; };
 		3D690EDE1847C89F006267E5 /* mandelbrot.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D690EDD1847C89F006267E5 /* mandelbrot.m */; };
 		3D9D4A901FD5E38600BCFD8C /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D9D4A8F1FD5E38600BCFD8C /* GLKit.framework */; };
+		3D9D4A931FD64EB000BCFD8C /* MandelbrotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D9D4A911FD64EAF00BCFD8C /* MandelbrotView.m */; };
+		3D9D4A961FD64F9D00BCFD8C /* ColorPalette.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D9D4A951FD64F9D00BCFD8C /* ColorPalette.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +72,10 @@
 		3D690EDC1847C88B006267E5 /* mandelbrot.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mandelbrot.h; sourceTree = "<group>"; };
 		3D690EDD1847C89F006267E5 /* mandelbrot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mandelbrot.m; sourceTree = "<group>"; };
 		3D9D4A8F1FD5E38600BCFD8C /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = ../../../../../System/Library/Frameworks/GLKit.framework; sourceTree = "<group>"; };
+		3D9D4A911FD64EAF00BCFD8C /* MandelbrotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MandelbrotView.m; sourceTree = "<group>"; };
+		3D9D4A921FD64EB000BCFD8C /* MandelbrotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MandelbrotView.h; sourceTree = "<group>"; };
+		3D9D4A941FD64F9D00BCFD8C /* ColorPalette.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorPalette.h; sourceTree = "<group>"; };
+		3D9D4A951FD64F9D00BCFD8C /* ColorPalette.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorPalette.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,20 +154,24 @@
 		3D690EAE18479287006267E5 /* MandelWeekend */ = {
 			isa = PBXGroup;
 			children = (
-				3D3CD98E1FC884340018775A /* Shaders */,
 				3D690EBA18479287006267E5 /* AppDelegate.h */,
 				3D690EBB18479287006267E5 /* AppDelegate.m */,
-				3D690EBD18479287006267E5 /* MainMenu.xib */,
-				3D690EC018479287006267E5 /* Images.xcassets */,
-				3D690EAF18479287006267E5 /* Supporting Files */,
-				3D690EDC1847C88B006267E5 /* mandelbrot.h */,
-				3D690EDD1847C89F006267E5 /* mandelbrot.m */,
 				3D3CD98F1FC89B360018775A /* GLMandelbrotView.h */,
 				3D3CD9901FC89B360018775A /* GLMandelbrotView.m */,
+				3D9D4A941FD64F9D00BCFD8C /* ColorPalette.h */,
+				3D9D4A951FD64F9D00BCFD8C /* ColorPalette.m */,
 				3D15C7D01ABCC63800C71A52 /* GradientTexture.h */,
 				3D15C7D11ABCC69100C71A52 /* GradientTexture.m */,
+				3D690EC018479287006267E5 /* Images.xcassets */,
+				3D690EBD18479287006267E5 /* MainMenu.xib */,
+				3D690EDC1847C88B006267E5 /* mandelbrot.h */,
+				3D690EDD1847C89F006267E5 /* mandelbrot.m */,
+				3D9D4A921FD64EB000BCFD8C /* MandelbrotView.h */,
+				3D9D4A911FD64EAF00BCFD8C /* MandelbrotView.m */,
 				3D3CD9971FC89F3F0018775A /* Shader.h */,
 				3D3CD9981FC89F3F0018775A /* Shader.m */,
+				3D3CD98E1FC884340018775A /* Shaders */,
+				3D690EAF18479287006267E5 /* Supporting Files */,
 			);
 			path = MandelWeekend;
 			sourceTree = "<group>";
@@ -308,6 +318,8 @@
 				3D3CD9911FC89B360018775A /* GLMandelbrotView.m in Sources */,
 				3D690EB518479287006267E5 /* main.m in Sources */,
 				3D3CD9991FC89F3F0018775A /* Shader.m in Sources */,
+				3D9D4A931FD64EB000BCFD8C /* MandelbrotView.m in Sources */,
+				3D9D4A961FD64F9D00BCFD8C /* ColorPalette.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

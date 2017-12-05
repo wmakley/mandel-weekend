@@ -39,7 +39,7 @@
 + (GLKVector2)defaultGraphSize;
 + (GLKVector2)defaultTranslation;
 
-@property (assign) NSTimeInterval renderTime;
+@property (nonatomic, assign) NSTimeInterval renderTime;
 
 // GUI properties
 @property (nonatomic, readonly) CGFloat zoomX;

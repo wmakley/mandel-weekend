@@ -82,7 +82,10 @@ static const GLfloat g_vertexBufferData[] = {
 
 - (void)drawRect:(NSRect)dirtyRect {
     // set this flag so certain messages can be ignored during rendering
-//    [self setIsRendering:YES];
+    [self setIsRendering:YES];
+    [self setRenderTime:0];
+    NSTimeInterval startTime = [NSDate timeIntervalSinceReferenceDate];
+    
     glClear(GL_COLOR_BUFFER_BIT);
     
     glEnableVertexAttribArray(0);
@@ -99,7 +102,10 @@ static const GLfloat g_vertexBufferData[] = {
     glDisableVertexAttribArray(0);
     
     glFlush();
-//    [self setIsRendering:NO];
+    
+    NSTimeInterval endTime =[NSDate timeIntervalSinceReferenceDate];
+    [self setRenderTime:endTime - startTime];
+    [self setIsRendering:NO];
 }
 
 - (void)prepareOpenGL {
@@ -309,6 +315,13 @@ static const GLfloat g_vertexBufferData[] = {
     [self setNeedsDisplay:YES];
 }
 
+// Legacy stuff from the original software renderer.
+// I packed a bunch of translations into NSRects,
+// where the size is the scaling and the origin is the translation
+// of the complex number graph.
+//
+// This is the only place this math is used. It is otherwise
+// all done in the shader now.
 - (void)zoomToDragRect {
     NSRect baseFractalSpace = [self baseGraphTransformationsAsRect];
     NSRect currentSpace = [self zoomedGraphTransformationsAsRect];
@@ -336,21 +349,25 @@ static const GLfloat g_vertexBufferData[] = {
     [self redrawFractal];
 }
 
+// used by zoomToDragRect
 - (NSPoint)convertScreenPointToFractalPoint:(NSPoint)screenPoint
 {
     return mandelbrot_point_for_pixel(screenPoint, [self bounds].size, [self zoomedGraphTransformationsAsRect]);
 }
 
+// used by zoomToDragRect
 - (NSRect)zoomAsRect
 {
     return NSMakeRect(_zoomX, _zoomY, _zoomScale, _zoomScale);
 }
 
+// used by zoomToDragRect
 - (NSRect)baseGraphTransformationsAsRect {
     return NSMakeRect(BASE_TRANSLATION.x, BASE_TRANSLATION.y, BASE_GRAPH_SIZE.x, BASE_GRAPH_SIZE.y);
 }
 
 // apply the current user zoom to the base translations
+// used by zoomToDragRect
 - (NSRect)zoomedGraphTransformationsAsRect
 {
     return zoom_in_on_rect([self baseGraphTransformationsAsRect],
