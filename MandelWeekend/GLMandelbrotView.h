@@ -34,7 +34,7 @@
     GLint _maxIterationsUniformLoc;
 }
 
-+ (NSInteger)defaultMaxIterations;
++ (GLint)defaultMaxIterations;
 + (NSSize)defaultGraphSize;
 + (NSPoint)defaultTranslation;
 
@@ -47,7 +47,7 @@
 - (void)setZoomX:(CGFloat)zoomX Y:(CGFloat)zoomY;
 
 @property (nonatomic) CGFloat zoomScale;
-@property (nonatomic) NSInteger maxIterations;
+@property (nonatomic) GLint maxIterations;
 
 @property (assign) BOOL isRendering;
 @property (assign) BOOL isDragging;

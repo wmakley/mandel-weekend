@@ -40,7 +40,7 @@ static const GLfloat g_vertexBufferData[] = {
 
 @implementation GLMandelbrotView
 
-+ (NSInteger)defaultMaxIterations {
++ (GLint)defaultMaxIterations {
     return 100;
 }
 
@@ -312,8 +312,8 @@ static const GLfloat g_vertexBufferData[] = {
     }
 }
 
-- (void)setMaxIterations:(NSInteger)maxIterations {
-    NSInteger clamped;
+- (void)setMaxIterations:(GLint)maxIterations {
+    GLint clamped;
     if (maxIterations < 1) {
         clamped = 1;
     } else if (maxIterations > 20000) {
@@ -452,7 +452,7 @@ static const GLfloat g_vertexBufferData[] = {
 }
 
 - (void)cleanUpOpenGL {
-    NSLog(@"cleanUpOpenGL");
+//    NSLog(@"cleanUpOpenGL");
     if (_vertexShader) {
         glDetachShader(_programID, [_vertexShader shaderID]);
         [_vertexShader deleteShader];
@@ -482,7 +482,7 @@ static const GLfloat g_vertexBufferData[] = {
 }
 
 - (void)dealloc {
-    NSLog(@"dealloc");
+//    NSLog(@"dealloc");
     [self cleanUpOpenGL];
 }
 
