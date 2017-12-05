@@ -68,7 +68,7 @@ static const GLfloat g_vertexBufferData[] = {
     if (self) {
         [self setWantsBestResolutionOpenGLSurface:YES]; // enable retina support
 //        [self setWantsLayer:YES]; // for over-laying the drag rect, but currently broken
-        
+
         _zoomX = 0.0;
         _zoomY = 0.0;
         _zoomScale = 1.0;
@@ -137,7 +137,7 @@ static const GLfloat g_vertexBufferData[] = {
 }
 
 - (GLint)maxIterationsDuringLiveResize {
-    return 100;
+    return 50;
 }
 
 // Called externally when the view may have resized
