@@ -38,8 +38,8 @@
     glCompileShader(_shaderID);
     
     glGetShaderiv(_shaderID, GL_COMPILE_STATUS, &_compilationResult);
-    NSLog(@"Shader compilation result: %d", _compilationResult);
-    
+//    NSLog(@"Shader compilation result: %d", _compilationResult);
+
     GLint infoLogLength;
     glGetShaderiv(_shaderID, GL_INFO_LOG_LENGTH, &infoLogLength);
     if (infoLogLength > 0) {
@@ -49,7 +49,11 @@
         NSLog(@"Shader Info Log: %@", _infoLog);
     }
 
-    return (_compilationResult == GL_TRUE);
+    return [self isCompiled];
+}
+
+- (BOOL)isCompiled {
+    return _shaderID != 0 && _compilationResult == GL_TRUE;
 }
 
 - (void)deleteShader {

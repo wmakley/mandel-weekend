@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import <OpenGL/gl3.h>
 #import "GradientTexture.h"
+#import "ShaderProgram.h"
 #import "Shader.h"
 
 @interface GLMandelbrotView : NSOpenGLView
@@ -24,8 +25,7 @@
     GLuint _vertexArrayID;
     GLuint _vertexBuffer;
     GLuint _gradientTextureID;
-    Shader *_vertexShader;
-    Shader *_fragmentShader;
+    ShaderProgram *_fractalProgram;
     GLuint _programID;
     
     GLint _screenSizeUniformLoc;

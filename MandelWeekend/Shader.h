@@ -23,6 +23,10 @@
 - (BOOL)compile;
 - (void)deleteShader;
 
+// Return true if the shader exists and has been compiled and not deleted
+- (BOOL)isCompiled;
+
+@property (nonatomic, readonly) GLenum shaderType;
 @property (nonatomic, readonly) GLuint shaderID;
 @property (nonatomic, readonly) NSString *infoLog;
 @property (nonatomic, readonly) NSString *source;

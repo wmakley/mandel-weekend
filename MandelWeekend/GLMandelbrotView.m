@@ -165,48 +165,18 @@ static const GLfloat g_vertexBufferData[] = {
     glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertexBufferData), g_vertexBufferData, GL_STATIC_DRAW);
 //    NSLog(@"vertices size: %lu", sizeof(g_vertexBufferData));
-    
-    _vertexShader = [[Shader alloc] initWithFileName:@"mandelbrot" extension:@"vsh" shaderType:GL_VERTEX_SHADER];
-    _fragmentShader = [[Shader alloc] initWithFileName:@"mandelbrot" extension:@"fsh" shaderType:GL_FRAGMENT_SHADER];
-    
-    if ( ! [_vertexShader compile] ) {
-        NSLog(@"Vertex shader compilation failed");
-        [self cleanUpOpenGL];
-        abort();
-    }
-    if ( ! [_fragmentShader compile] ) {
-        NSLog(@"Fragment shader compilation failed");
-        [self cleanUpOpenGL];
-        abort();
-    }
-    
-    _programID = glCreateProgram();
-    glAttachShader(_programID, [_vertexShader shaderID]);
-    glAttachShader(_programID, [_fragmentShader shaderID]);
-    glLinkProgram(_programID);
-    glValidateProgram(_programID);
-    
-    GLint linkResult = GL_FALSE;
-    GLint infoLogLength = 0;
-    GLint isValid = GL_FALSE;
-    glGetProgramiv(_programID, GL_LINK_STATUS, &linkResult);
-    glGetProgramiv(_programID, GL_VALIDATE_STATUS, &isValid);
-    glGetProgramiv(_programID, GL_INFO_LOG_LENGTH, &infoLogLength);
-    
-    if (infoLogLength > 0) {
-        GLchar infoLogCString[infoLogLength];
-        glGetProgramInfoLog(_programID, infoLogLength, NULL, &infoLogCString[0]);
-        NSLog(@"Program linking log: %s", infoLogCString);
-    }
-    
-    if (linkResult == GL_FALSE || isValid == GL_FALSE) {
-        NSLog(@"linking or validation failed, link = %d, valid = %d", linkResult, isValid);
+
+    _fractalProgram = [[ShaderProgram alloc] init];
+    [_fractalProgram addVertexShaderWithFileName:@"mandelbrot"];
+    [_fractalProgram addFragmentShaderWithFileName:@"mandelbrot"];
+    if ( ! [_fractalProgram compileAndLink] ) {
         [self cleanUpOpenGL];
         abort();
     }
     
     NSLog(@"Shader program is valid, activating");
-    glUseProgram(_programID);
+    _programID = [_fractalProgram programID];
+    [_fractalProgram useProgram];
     
     glGenTextures(1, &_gradientTextureID);
     glActiveTexture(GL_TEXTURE0);
@@ -215,12 +185,12 @@ static const GLfloat g_vertexBufferData[] = {
     glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     [self sendTextureData];
     
-    GLint texLoc = glGetUniformLocation(_programID, "tex");
-    GLint graphSizeLoc = glGetUniformLocation(_programID, "graphSize");
-    _screenSizeUniformLoc = glGetUniformLocation(_programID, "screenSize");
-    _translateUniformLoc = glGetUniformLocation(_programID, "translate");
-    _scaleUniformLoc = glGetUniformLocation(_programID, "scale");
-    _maxIterationsUniformLoc = glGetUniformLocation(_programID, "iter");
+    GLint texLoc = [_fractalProgram getUniformLocation:"tex"];
+    GLint graphSizeLoc = [_fractalProgram getUniformLocation:"graphSize"];
+    _screenSizeUniformLoc = [_fractalProgram getUniformLocation:"screenSize"];
+    _translateUniformLoc = [_fractalProgram getUniformLocation:"translate"];
+    _scaleUniformLoc = [_fractalProgram getUniformLocation:"scale"];
+    _maxIterationsUniformLoc = [_fractalProgram getUniformLocation:"iter"];
 //    NSLog(@"tex: %d, center: %d, scale: %d, iter: %d", texLoc, centerLoc, scaleLoc, iterLoc);
 
     // uniform sampler1D tex - always points to texture 0;
@@ -453,18 +423,8 @@ static const GLfloat g_vertexBufferData[] = {
 
 - (void)cleanUpOpenGL {
 //    NSLog(@"cleanUpOpenGL");
-    if (_vertexShader) {
-        glDetachShader(_programID, [_vertexShader shaderID]);
-        [_vertexShader deleteShader];
-        _vertexShader = nil;
-    }
-    if (_fragmentShader) {
-        glDetachShader(_programID, [_fragmentShader shaderID]);
-        [_fragmentShader deleteShader];
-        _fragmentShader = nil;
-    }
     if (_programID != 0) {
-        glDeleteProgram(_programID);
+        [_fractalProgram deleteShadersAndProgram];
         _programID = 0;
     }
     if (_vertexBuffer != 0) {
