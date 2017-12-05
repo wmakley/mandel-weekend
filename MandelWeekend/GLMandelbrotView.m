@@ -43,12 +43,12 @@ static const GLfloat g_vertexBufferData[] = {
     return 100;
 }
 
-+ (GLKVector2)defaultGraphSize {
-    return GLKVector2Make(2.6, 2.3);
++ (NSSize)defaultGraphSize {
+    return NSMakeSize(2.6, 2.3);
 }
 
-+ (GLKVector2)defaultTranslation {
-    return GLKVector2Make(-0.75, 0.0);
++ (NSPoint)defaultTranslation {
+    return NSMakePoint(-0.75, 0.0);
 }
 
 
@@ -66,22 +66,26 @@ static const GLfloat g_vertexBufferData[] = {
     self = [super initWithFrame:frame pixelFormat:pf];
     if (self) {
         [self setWantsBestResolutionOpenGLSurface:YES]; // enable retina support
+        
+//        [self setWantsLayer:YES]; // for over-laying the drag rect, but currently broken
+        
         _zoomX = 0.0;
         _zoomY = 0.0;
         _zoomScale = 1.0;
         _maxIterations = [GLMandelbrotView defaultMaxIterations];
         _isRendering = NO;
         _texture = [[GradientTexture alloc] init];
-        NSLog(@"starting programID: %u", _programID);
         
-        BASE_GRAPH_SIZE = [GLMandelbrotView defaultGraphSize];
-        BASE_TRANSLATION = [GLMandelbrotView defaultTranslation];
+        _baseGraphSize = [GLMandelbrotView defaultGraphSize];
+        _baseTranslation = [GLMandelbrotView defaultTranslation];
     }
     return self;
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
-    // set this flag so certain messages can be ignored during rendering
+    if ([self isDragging] || [self isRendering]) return;
+//    NSLog(@"drawRect");
+
     [self setIsRendering:YES];
     [self setRenderTime:0];
     NSTimeInterval startTime = [NSDate timeIntervalSinceReferenceDate];
@@ -103,9 +107,26 @@ static const GLfloat g_vertexBufferData[] = {
     
     glFlush();
     
-    NSTimeInterval endTime =[NSDate timeIntervalSinceReferenceDate];
+    // block until rendering is done
+    glFinish();
+    
+    NSTimeInterval endTime = [NSDate timeIntervalSinceReferenceDate];
     [self setRenderTime:endTime - startTime];
     [self setIsRendering:NO];
+}
+
+- (void)reshape {
+//    NSLog(@"reshape");
+    // Just do live resizing for now
+    [self resize];
+}
+
+// Called externally or internally when the view may have resized
+- (void)resize {
+    NSSize screenSize = [self screenSizeInPixels];
+    glViewport(0, 0, screenSize.width, screenSize.height);
+    [self setScreenSizeUniform:screenSize];
+    [self setNeedsDisplay:YES];
 }
 
 - (void)prepareOpenGL {
@@ -168,9 +189,9 @@ static const GLfloat g_vertexBufferData[] = {
     NSLog(@"Shader program is valid, activating");
     glUseProgram(_programID);
     
-    glGenTextures(1, &_textureID);
+    glGenTextures(1, &_gradientTextureID);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_1D, _textureID);
+    glBindTexture(GL_TEXTURE_1D, _gradientTextureID);
     glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     [self sendTextureData];
@@ -187,7 +208,7 @@ static const GLfloat g_vertexBufferData[] = {
     glProgramUniform1i(_programID, texLoc, 0);
     // Base scaling of the graph never changes, but we need to know it
     // both here and in the shader.
-    glProgramUniform2d(_programID, graphSizeLoc, BASE_GRAPH_SIZE.x, BASE_GRAPH_SIZE.y);
+    glProgramUniform2d(_programID, graphSizeLoc, _baseGraphSize.width, _baseGraphSize.height);
     [self setScreenSizeUniform:screenSize];
     [self setTranslationUniformX:_zoomX Y:_zoomY];
     [self setScaleUniform:_zoomScale];
@@ -289,7 +310,7 @@ static const GLfloat g_vertexBufferData[] = {
 }
 
 - (void)setTranslationUniformX:(GLdouble)x Y:(GLdouble)y {
-    glProgramUniform2d(_programID, _translateUniformLoc, BASE_TRANSLATION.x + x, y);
+    glProgramUniform2d(_programID, _translateUniformLoc, _baseTranslation.x + x, y);
 }
 
 - (void)setScaleUniform:(GLdouble)scale {
@@ -305,14 +326,6 @@ static const GLfloat g_vertexBufferData[] = {
     GLsizei backingPixelWidth  = (GLsizei)(backingBounds.size.width),
     backingPixelHeight = (GLsizei)(backingBounds.size.height);
     return NSMakeSize(backingPixelWidth, backingPixelHeight);
-}
-
-// Called externally or internally when the view may have resized
-- (void)resize {
-    NSSize screenSize = [self screenSizeInPixels];
-    glViewport(0, 0, screenSize.width, screenSize.height);
-    [self setScreenSizeUniform:screenSize];
-    [self setNeedsDisplay:YES];
 }
 
 // Legacy stuff from the original software renderer.
@@ -363,7 +376,8 @@ static const GLfloat g_vertexBufferData[] = {
 
 // used by zoomToDragRect
 - (NSRect)baseGraphTransformationsAsRect {
-    return NSMakeRect(BASE_TRANSLATION.x, BASE_TRANSLATION.y, BASE_GRAPH_SIZE.x, BASE_GRAPH_SIZE.y);
+    return NSMakeRect(_baseTranslation.x, _baseTranslation.y,
+                      _baseGraphSize.width, _baseGraphSize.height);
 }
 
 // apply the current user zoom to the base translations
@@ -435,9 +449,9 @@ static const GLfloat g_vertexBufferData[] = {
         glDeleteVertexArrays(1, &_vertexArrayID);
         _vertexArrayID = 0;
     }
-    if (_textureID != 0) {
-        glDeleteTextures(1, &_textureID);
-        _textureID = 0;
+    if (_gradientTextureID != 0) {
+        glDeleteTextures(1, &_gradientTextureID);
+        _gradientTextureID = 0;
     }
 }
 

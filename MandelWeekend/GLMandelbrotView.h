@@ -8,7 +8,6 @@
 
 #import <Cocoa/Cocoa.h>
 #import <OpenGL/gl3.h>
-#import <GLKit/GLKit.h>
 #import "GradientTexture.h"
 #import "Shader.h"
 
@@ -19,12 +18,12 @@
     
     NSPoint _fractalTranslation;
     
-    GLKVector2 BASE_TRANSLATION;
-    GLKVector2 BASE_GRAPH_SIZE;
+    NSPoint _baseTranslation;
+    NSSize _baseGraphSize;
     
     GLuint _vertexArrayID;
     GLuint _vertexBuffer;
-    GLuint _textureID;
+    GLuint _gradientTextureID;
     Shader *_vertexShader;
     Shader *_fragmentShader;
     GLuint _programID;
@@ -36,8 +35,8 @@
 }
 
 + (NSInteger)defaultMaxIterations;
-+ (GLKVector2)defaultGraphSize;
-+ (GLKVector2)defaultTranslation;
++ (NSSize)defaultGraphSize;
++ (NSPoint)defaultTranslation;
 
 @property (nonatomic, assign) NSTimeInterval renderTime;
 

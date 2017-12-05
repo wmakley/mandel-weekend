@@ -33,14 +33,14 @@ NSRect zoom_in_on_rect(NSRect base, NSRect zoom) {
 // in screen of dimensions mandelbrot_space.
 //
 // Imagine mandelbrot_space as being a graph super-imposed on the screen,
-// where screen width is equivalent to mandelbrot width, and the mandebrot
+// where screen width is equivalent to mandelbrot width, and the mandelbrot
 // origin in the center of the screen.
 //
 // Another way to think of it: mandelbrot_space is just the size of the graph
 // to draw the fractical on, and its origin is how much to translate the
 // fractal.
 //
-// Really we are peforming a translation and a scaling on the pixel defined a rect,
+// Really we are peforming a translation and a scaling on the pixel defined by a rect,
 // and my own intuitive train of thoughts on what to multiply by what, when
 // this should really just be matrices or NSAffineTransformations or something.
 NSPoint mandelbrot_point_for_pixel(NSPoint pixel, NSSize screen, NSRect mandelbrot_space) {    

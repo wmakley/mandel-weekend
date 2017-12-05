@@ -22,12 +22,14 @@
 
 - (IBAction)maxIterationsChanged:(id)sender
 {
-//    [self refreshButtonPressed:sender];
+    // sometimes the change isn't sent when the enter key is pressed
+    [self refreshButtonPressed:sender];
 }
 
 - (void)windowDidEndLiveResize:(NSNotification *)notification
 {
-    [_mandelbrotView resize];
+    // we are using live resizing for now, since there is no way to disable it
+//    [_mandelbrotView resize];
 }
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication {
