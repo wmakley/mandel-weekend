@@ -34,10 +34,28 @@ void main() {
     if (i == iter) {
         color = vec4(0.0, 0.0, 0.0, 0.0);
     } else {
-        color = texture(tex, float(i) / float(iter));
+//        color = texture(tex, float(i) / float(iter));
+        float escapeTime = float(i) / float(iter - 1);
+
+        float red = escapeTime;
+
+        // create a cycle of green
+        float green = escapeTime * 2.0;
+        if (green > 1.0) {
+            green -= 1.0;
+        }
+
+        float blue = float(i % iter);
+
+        color = vec4(
+                     red,
+                     green,
+                     blue,
+                     1.0
+        );
     }
     
-    // texture sampling not working yet, just generate a color
+    // generate a simple gradient
 //    float escapeTime = float(i) / float(iter);
 //    color = vec4(
 //                 1.0 - escapeTime, // max == 0

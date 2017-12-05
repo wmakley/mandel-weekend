@@ -42,19 +42,19 @@
 @property (assign) NSTimeInterval renderTime;
 
 // GUI properties
-@property (readonly) CGFloat zoomX;
+@property (nonatomic, readonly) CGFloat zoomX;
 - (void)setZoomX:(CGFloat)zoomX;
 
-@property (readonly) CGFloat zoomY;
+@property (nonatomic, readonly) CGFloat zoomY;
 - (void)setZoomY:(CGFloat)zoomY;
 
 // set both at the same time to avoid multiple redraws
 - (void)setZoomX:(CGFloat)zoomX Y:(CGFloat)zoomY;
 
-@property (readonly) CGFloat zoomScale;
+@property (nonatomic, readonly) CGFloat zoomScale;
 - (void)setZoomScale:(CGFloat)zoomScale;
 
-@property (readonly) NSInteger maxIterations;
+@property (nonatomic, readonly) NSInteger maxIterations;
 - (void)setMaxIterations:(NSInteger)maxIterations;
 
 @property (assign) BOOL isRendering;

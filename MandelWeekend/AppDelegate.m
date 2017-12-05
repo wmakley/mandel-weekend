@@ -12,22 +12,22 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    [self.mandelbrotView resize];
+    [_mandelbrotView resize];
 }
 
 - (IBAction)refreshButtonPressed:(id)sender
 {
-    [self.mandelbrotView redrawFractal];
+    [_mandelbrotView redrawFractal];
 }
 
 - (IBAction)maxIterationsChanged:(id)sender
 {
-    [self refreshButtonPressed:sender];
+//    [self refreshButtonPressed:sender];
 }
 
 - (void)windowDidEndLiveResize:(NSNotification *)notification
 {
-    [self.mandelbrotView resize];
+    [_mandelbrotView resize];
 }
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication {
@@ -35,7 +35,7 @@
 }
 
 - (void)applicationWillTerminate:(NSNotification *)notification {
-    [self.mandelbrotView cleanUpOpenGL];
+    [_mandelbrotView cleanUpOpenGL];
 }
 
 @end

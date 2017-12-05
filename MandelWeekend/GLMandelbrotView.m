@@ -71,7 +71,7 @@ static const GLfloat g_vertexBufferData[] = {
         _zoomScale = 1.0;
         _maxIterations = [GLMandelbrotView defaultMaxIterations];
         _isRendering = NO;
-        _texture = [[GradientTexture alloc] initWithWidth:256];
+        _texture = [[GradientTexture alloc] init];
         NSLog(@"starting programID: %u", _programID);
         
         BASE_GRAPH_SIZE = [GLMandelbrotView defaultGraphSize];
@@ -165,7 +165,7 @@ static const GLfloat g_vertexBufferData[] = {
     glGenTextures(1, &_textureID);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_1D, _textureID);
-//    glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     [self sendTextureData];
     
@@ -310,14 +310,6 @@ static const GLfloat g_vertexBufferData[] = {
 }
 
 - (void)zoomToDragRect {
-    // 1. Find the center of the rectangle in complex coordinates
-    // 2. No zoom for boxes of < 2 pixels, just translate and return
-    // 3. Figure out the new scale, by proportion of selected screen against overall screen
-    // 4. Set scale
-    
-    
-    // TODO: track all the fractal transformations built into the shader,
-    // and do the complex space transformations outside of the shader.
     NSRect baseFractalSpace = [self baseGraphTransformationsAsRect];
     NSRect currentSpace = [self zoomedGraphTransformationsAsRect];
     
@@ -334,7 +326,7 @@ static const GLfloat g_vertexBufferData[] = {
     
     NSPoint dragCenter = [self convertScreenPointToFractalPoint:dragCenterPx];
     
-    // Calculate new zoom translation by taking different between this point and fractal space translation
+    // Calculate new zoom translation by taking difference between this point and fractal space translation
     // and adding it to the old zoom translation.
     NSPoint translation = NSMakePoint( _zoomX + (dragCenter.x - currentSpace.origin.x),
                                        _zoomY + (dragCenter.y - currentSpace.origin.y) );

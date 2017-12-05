@@ -45,7 +45,10 @@ static const GLsizei DEFAULT_WIDTH = 256;
         [_texture setLength:byteLength];
     }
     GLfloat *colors = [_texture mutableBytes];
-    for (GLsizei i = 0; i < width; i += 1) {
+//    colors[0] = 0.0f;
+//    colors[1] = 0.0f;
+//    colors[2] = 0.0f;
+    for (GLsizei i = 1; i < width; i += 1) {
         // Old integer-based algorithm:
         // alpha = 255
 //        UInt32 color = 0x000000FF;
@@ -58,7 +61,7 @@ static const GLsizei DEFAULT_WIDTH = 256;
         
         GLfloat red = (GLfloat)i / width_f;
         GLfloat green = (CGFloat)i / width_f / 2.5f;
-        GLfloat blue = (GLfloat)(i % 256);
+        GLfloat blue = 0.5f;
         
         NSUInteger pointerOffset = i * 3;
         colors[pointerOffset] = red;
