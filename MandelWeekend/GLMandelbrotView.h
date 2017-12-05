@@ -38,23 +38,16 @@
 + (NSSize)defaultGraphSize;
 + (NSPoint)defaultTranslation;
 
-@property (nonatomic, assign) NSTimeInterval renderTime;
+@property (assign) NSTimeInterval renderTime;
 
 // GUI properties
-@property (nonatomic, readonly) CGFloat zoomX;
-- (void)setZoomX:(CGFloat)zoomX;
-
-@property (nonatomic, readonly) CGFloat zoomY;
-- (void)setZoomY:(CGFloat)zoomY;
-
+@property (nonatomic) CGFloat zoomX;
+@property (nonatomic) CGFloat zoomY;
 // set both at the same time to avoid multiple redraws
 - (void)setZoomX:(CGFloat)zoomX Y:(CGFloat)zoomY;
 
-@property (nonatomic, readonly) CGFloat zoomScale;
-- (void)setZoomScale:(CGFloat)zoomScale;
-
-@property (nonatomic, readonly) NSInteger maxIterations;
-- (void)setMaxIterations:(NSInteger)maxIterations;
+@property (nonatomic) CGFloat zoomScale;
+@property (nonatomic) NSInteger maxIterations;
 
 @property (assign) BOOL isRendering;
 @property (assign) BOOL isDragging;
@@ -66,6 +59,7 @@
 - (void)resize;
 
 - (CGFloat)aspectRatio;
+- (GLint)maxIterationsDuringLiveResize;
 
 // Call before the application terminates to cleanup OpenGL resources
 - (void)cleanUpOpenGL;

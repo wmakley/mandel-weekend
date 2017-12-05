@@ -36,8 +36,6 @@ static const GLfloat g_vertexBufferData[] = {
 
 - (NSRect)baseGraphTransformationsAsRect;
 - (NSRect)zoomedGraphTransformationsAsRect;
-
-- (GLint)maxIterationsDuringLiveResize;
 @end
 
 @implementation GLMandelbrotView
