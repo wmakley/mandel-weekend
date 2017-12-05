@@ -10,6 +10,7 @@
 #import "mandelbrot.h"
 #import <math.h>
 
+
 // g for global. vertices for 2 triangles making a quad.
 static const GLfloat g_vertexBufferData[] = {
     -1.0f, -1.0f, 0.0f, // lower left
@@ -126,7 +127,7 @@ static const GLfloat g_vertexBufferData[] = {
     NSSize screenSize = [self screenSizeInPixels];
     glViewport(0, 0, screenSize.width, screenSize.height);
     [self setScreenSizeUniform:screenSize];
-    [self setNeedsDisplay:YES];
+//    [self setNeedsDisplay:YES];
 }
 
 - (void)prepareOpenGL {

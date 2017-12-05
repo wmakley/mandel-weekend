@@ -45,7 +45,7 @@ void main() {
             green -= 1.0;
         }
 
-        float blue = float(i % iter);
+        float blue = 1.0 - escapeTime;
 
         color = vec4(
                      red,
