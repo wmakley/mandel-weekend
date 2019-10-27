@@ -117,6 +117,7 @@ static const GLfloat g_vertexBufferData[] = {
 }
 
 - (void)reshape {
+    [super reshape];
 //    NSLog(@"reshape");
     // Just do live resizing for now
     NSSize screenSize = [self screenSizeInPixels];
@@ -149,6 +150,8 @@ static const GLfloat g_vertexBufferData[] = {
 }
 
 - (void)prepareOpenGL {
+    [super prepareOpenGL];
+
     NSLog(@"OpenGL version is %s.\nSupported GLSL version is %s.",
           (char *)glGetString(GL_VERSION),
           (char *)glGetString(GL_SHADING_LANGUAGE_VERSION)
