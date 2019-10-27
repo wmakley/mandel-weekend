@@ -1,50 +1,67 @@
 //
-//  MandelbrotView.h
+//  GLMandelbrotView.h
 //  MandelWeekend
 //
-//  Created by William Makley on 11/29/13.
-//  Copyright (c) 2013 William Makley. All rights reserved.
+//  Created by William Makley on 11/23/17.
+//  Copyright © 2017 William Makley. All rights reserved.
 //
 
 #import <Cocoa/Cocoa.h>
-#import "ColorPalette.h"
+#import <MetalKit/MetalKit.h>
+//#import "GradientTexture.h"
+//#import "ShaderProgram.h"
+//#import "Shader.h"
 
-@interface MandelbrotView : NSView <NSWindowDelegate>
+@interface MandelbrotView : MTKView
 {
-    NSBitmapImageRep *fractalBitmapRepresentation;
-    NSImage *fractalImage;
-    ColorPalette *colorPalette;
-    CGFloat zoomX, zoomY, zoomScale;
-    NSInteger maxIterations;
-    NSTimeInterval _startTime;
+//    GradientTexture *_texture;
+    NSRect _dragRect;
     
-    NSRect dragRect;
+    NSPoint _fractalTranslation;
     
-    NSAffineTransform *viewToFractal;
+    NSPoint _baseTranslation;
+    NSSize _baseGraphSize;
     
-    NSRect baseFractalSpace;
-
-    // Used by drawFractal to prevent more than one thread from calling drawFractal at a time,
-    // so benchmarks aren't affected by race conditions.
-    NSLock *renderLock;
-
-    // Lock when modifying or reading fractalBitmapRepresentation
-    NSLock *bitmapLock;
+//    GLuint _vertexArrayID;
+//    GLuint _vertexBuffer;
+//    GLuint _gradientTextureID;
+//    ShaderProgram *_fractalProgram;
+//    GLuint _programID;
+//
+//    GLint _screenSizeUniformLoc;
+//    GLint _translateUniformLoc;
+//    GLint _scaleUniformLoc;
+//    GLint _maxIterationsUniformLoc;
 }
 
-- (instancetype)initWithFrame:(NSRect)frame NS_DESIGNATED_INITIALIZER;
-- (instancetype)initWithCoder:(NSCoder *)coder NS_DESIGNATED_INITIALIZER;
++ (NSInteger)defaultMaxIterations;
++ (NSSize)defaultGraphSize;
++ (NSPoint)defaultTranslation;
 
 @property (assign) NSTimeInterval renderTime;
-@property (assign) CGFloat zoomX;
-@property (assign) CGFloat zoomY;
-@property (assign) CGFloat zoomScale;
-@property (assign) NSInteger maxIterations;
+
+// GUI properties
+@property (nonatomic) CGFloat zoomX;
+@property (nonatomic) CGFloat zoomY;
+// set both at the same time to avoid multiple redraws
+- (void)setZoomX:(CGFloat)zoomX Y:(CGFloat)zoomY;
+
+@property (nonatomic) CGFloat zoomScale;
+@property (nonatomic) NSInteger maxIterations;
+
 @property (assign) BOOL isRendering;
 @property (assign) BOOL isDragging;
+@property (nonatomic, assign) BOOL isLiveResizing;
 
-- (void)redrawFractal;
-- (void)resize;
-- (NSRect)zoom;
+// Call to re-render the fractal
+//- (void)redrawFractal;
+// Call when the view has been resized to explicitly trigger a render
+//- (void)resize;
+
+- (CGFloat)aspectRatio;
+- (NSInteger)maxIterationsDuringLiveResize;
+
+// Call before the application terminates to cleanup OpenGL resources
+//- (void)cleanUpOpenGL;
 
 @end

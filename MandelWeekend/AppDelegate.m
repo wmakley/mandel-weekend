@@ -12,12 +12,12 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    [_mandelbrotView resize];
+    [_mandelbrotView setNeedsDisplay:YES];
 }
 
 - (IBAction)refreshButtonPressed:(id)sender
 {
-    [_mandelbrotView redrawFractal];
+    [_mandelbrotView setNeedsDisplay:YES];
 }
 
 - (IBAction)maxIterationsChanged:(id)sender
@@ -42,7 +42,7 @@
 }
 
 - (void)applicationWillTerminate:(NSNotification *)notification {
-    [_mandelbrotView cleanUpOpenGL];
+//    [_mandelbrotView cleanUpOpenGL];
 }
 
 @end

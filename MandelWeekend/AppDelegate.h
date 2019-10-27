@@ -7,12 +7,12 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "GLMandelbrotView.h"
+#import "MandelbrotView.h"
 
 @interface AppDelegate : NSObject <NSApplicationDelegate, NSWindowDelegate>
 
 @property (assign) IBOutlet NSWindow *window;
-@property (assign) IBOutlet GLMandelbrotView *mandelbrotView;
+@property (assign) IBOutlet MandelbrotView *mandelbrotView;
 @property (assign) IBOutlet NSTextField *benchmarkTextField;
 
 - (IBAction)maxIterationsChanged:(id)sender;
