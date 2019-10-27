@@ -9,6 +9,18 @@
 #import "ShaderProgram.h"
 #import "Shader.h"
 
+static const char* UNIFORMS[] = {
+    "tex",
+    "screenSize",
+    "graphSize",
+    "translate",
+    "scale",
+    "iter"
+};
+
+static const int NUM_UNIFORMS = 6;
+
+
 @implementation ShaderProgram
 
 - (instancetype)init {
@@ -101,7 +113,15 @@
     glGetProgramiv(_programID, GL_ACTIVE_ATTRIBUTES, &_numActiveAttribs);
     glGetProgramiv(_programID, GL_ACTIVE_UNIFORMS, &_numActiveUniforms);
 
-    // TODO: save the uniforms to the dictionary
+    // Save the uniforms to the dictionary
+//    _uniformLocations = [[NSMutableDictionary alloc] initWithCapacity:NUM_UNIFORMS];
+//    for (int i = 0; i < NUM_UNIFORMS; i++) {
+//        const char *name = UNIFORMS[i];
+//        GLint location = [self getUniformLocation:name];
+//        [_uniformLocations setValue:[NSNumber numberWithInt:location]
+//                             forKey:[NSString stringWithCString:name
+//                                                       encoding: NSASCIIStringEncoding]];
+//    }
 
     return YES;
 }
