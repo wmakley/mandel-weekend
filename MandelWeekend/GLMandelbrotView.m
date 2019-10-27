@@ -177,7 +177,7 @@ static const GLfloat g_vertexBufferData[] = {
         abort();
     }
     
-    NSLog(@"Shader program is valid, activating");
+//    NSLog(@"Shader program is valid, activating");
     _programID = [_fractalProgram programID];
     [_fractalProgram useProgram];
     
