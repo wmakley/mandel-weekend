@@ -1,6 +1,6 @@
 #version 410
 
-uniform sampler1D tex;
+//uniform sampler1D tex;
 uniform dvec2 screenSize;
 uniform dvec2 graphSize;
 uniform dvec2 translate;
@@ -34,6 +34,7 @@ void main() {
     if (i == iter) {
         color = vec4(0.0, 0.0, 0.0, 0.0);
     } else {
+        // TODO: texture sampling does not work / give very good results, but would add easier customizeability.
 //        color = texture(tex, float(i) / float(iter));
         float escapeTime = float(i) / float(iter - 1);
 
