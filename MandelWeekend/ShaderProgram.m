@@ -9,16 +9,16 @@
 #import "ShaderProgram.h"
 #import "Shader.h"
 
-static const char* UNIFORMS[] = {
-    "tex",
-    "screenSize",
-    "graphSize",
-    "translate",
-    "scale",
-    "iter"
-};
-
-static const int NUM_UNIFORMS = 6;
+//static const char* UNIFORMS[] = {
+//    "tex",
+//    "screenSize",
+//    "graphSize",
+//    "translate",
+//    "scale",
+//    "iter"
+//};
+//
+//static const int NUM_UNIFORMS = 6;
 
 
 @implementation ShaderProgram

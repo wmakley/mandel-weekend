@@ -6,7 +6,7 @@
 //  Copyright © 2017 William Makley. All rights reserved.
 //
 
-#import "GLMandelbrotView.h"
+#import "GLMandelbrotLayer.h"
 #import "mandelbrot.h"
 #import <math.h>
 
@@ -23,13 +23,13 @@ static const GLfloat g_vertexBufferData[] = {
 };
 
 
-@interface GLMandelbrotView (Private)
+@interface GLMandelbrotLayer (Private)
 - (NSSize)screenSizeInPixels;
 
 - (void)zoomToDragRect;
 
-- (void)sendTextureData;
-- (void)setScreenSizeUniform:(NSSize)screenSize;
+//- (void)sendTextureData;
+- (void)setScreenSizeUniformWidth:(GLdouble)width height:(GLdouble)height;
 - (void)setTranslationUniformX:(GLdouble)x Y:(GLdouble)y;
 - (void)setScaleUniform:(GLdouble)scale;
 - (void)setMaxIterationsUniform:(GLint)maxIterations;
@@ -38,7 +38,7 @@ static const GLfloat g_vertexBufferData[] = {
 - (NSRect)zoomedGraphTransformationsAsRect;
 @end
 
-@implementation GLMandelbrotView
+@implementation GLMandelbrotLayer
 
 + (GLint)defaultMaxIterations {
     return 100;
@@ -53,39 +53,75 @@ static const GLfloat g_vertexBufferData[] = {
 }
 
 
-- (instancetype)initWithFrame:(NSRect)frame {
-    NSOpenGLPixelFormatAttribute attrs[] =
-    {
-//        NSOpenGLPFADoubleBuffer, // This causes a black screen
-        NSOpenGLPFADepthSize, 24,
-        NSOpenGLPFAOpenGLProfile,
-        NSOpenGLProfileVersion3_2Core,
-        0
-    };
-    NSOpenGLPixelFormat *pf = [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
-    
-    self = [super initWithFrame:frame pixelFormat:pf];
+- (instancetype)init
+{
+    self = [super init];
     if (self) {
-        [self setWantsBestResolutionOpenGLSurface:YES]; // enable retina support
-//        [self setWantsLayer:YES]; // for over-laying the drag rect, but currently broken
+        [self setNeedsDisplayOnBoundsChange:YES];
+        [self setAsynchronous:YES];
 
         _zoomX = 0.0;
         _zoomY = 0.0;
         _zoomScale = 1.0;
-        _maxIterations = [GLMandelbrotView defaultMaxIterations];
+        _maxIterations = [GLMandelbrotLayer defaultMaxIterations];
         _isRendering = NO;
         _isLiveResizing = NO;
         _texture = [[GradientTexture alloc] init];
         
-        _baseGraphSize = [GLMandelbrotView defaultGraphSize];
-        _baseTranslation = [GLMandelbrotView defaultTranslation];
+        _baseGraphSize = [GLMandelbrotLayer defaultGraphSize];
+        _baseTranslation = [GLMandelbrotLayer defaultTranslation];
     }
     return self;
 }
 
-- (void)drawRect:(NSRect)dirtyRect {
+- (NSOpenGLPixelFormat *)openGLPixelFormatForDisplayMask:(uint32_t)mask
+{
+    //    NSOpenGLPixelFormatAttribute attrs[] =
+    //    {
+    ////        NSOpenGLPFADoubleBuffer, // This causes a black screen
+    //        NSOpenGLPFADepthSize, 24,
+    //        NSOpenGLPFAOpenGLProfile,
+    //        NSOpenGLProfileVersion3_2Core,
+    //        0
+    //    };
+    //    NSOpenGLPixelFormat *pf = [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
+    //
+    NSOpenGLPixelFormatAttribute attr[] = {
+        NSOpenGLPFAOpenGLProfile, NSOpenGLProfileVersion3_2Core,
+        NSOpenGLPFANoRecovery,
+        NSOpenGLPFAAccelerated,
+        NSOpenGLPFADoubleBuffer,
+        NSOpenGLPFAColorSize, 24,
+        0
+    };
+    return [[NSOpenGLPixelFormat alloc] initWithAttributes:attr];
+}
+
+
+- (NSOpenGLContext*)openGLContextForPixelFormat:(NSOpenGLPixelFormat *)pixelFormat
+{
+    return [super openGLContextForPixelFormat:pixelFormat];
+}
+
+- (BOOL)canDrawInOpenGLContext:(NSOpenGLContext *)context
+                   pixelFormat:(NSOpenGLPixelFormat *)pixelFormat
+                  forLayerTime:(CFTimeInterval)timeInterval
+                   displayTime:(const CVTimeStamp *)timeStamp
+{
+    // TODO: return YES here if a new frame needs to be rendered (e.g. because of some animation
+    //       or result of a user interaction). Return NO if the last frame can be re-used.
+    return [self needsDisplay];
+}
+
+- (void)drawInOpenGLContext:(NSOpenGLContext *)context
+                pixelFormat:(NSOpenGLPixelFormat *)pixelFormat
+               forLayerTime:(CFTimeInterval)timeInterval
+                displayTime:(const CVTimeStamp *)timeStamp
+{
     if ([self isDragging] || [self isRendering]) return;
-//    NSLog(@"drawRect");
+
+    [context makeCurrentContext];
+    CGLLockContext(context.CGLContextObj);
 
     [self setIsRendering:YES];
     [self setRenderTime:0];
@@ -110,6 +146,8 @@ static const GLfloat g_vertexBufferData[] = {
     
     // block until rendering is done
     glFinish();
+    [context flushBuffer];
+    CGLUnlockContext(context.CGLContextObj);
 
     NSTimeInterval endTime = [NSDate timeIntervalSinceReferenceDate];
     [self setRenderTime:endTime - startTime];
@@ -117,12 +155,12 @@ static const GLfloat g_vertexBufferData[] = {
 }
 
 - (void)reshape {
-    [super reshape];
 //    NSLog(@"reshape");
     // Just do live resizing for now
     NSSize screenSize = [self screenSizeInPixels];
-    glViewport(0, 0, screenSize.width, screenSize.height);
-    [self setScreenSizeUniform:screenSize];
+    NSLog(@"screenSize: %d x %d", (int)screenSize.width, (int)screenSize.height);
+    glViewport(0, 0, screenSize.width, screenSize.width);
+    [self setScreenSizeUniformWidth:screenSize.width height:screenSize.height];
 }
 
 - (void)setIsLiveResizing:(BOOL)isLiveResizing {
@@ -133,7 +171,6 @@ static const GLfloat g_vertexBufferData[] = {
             isLiveResizing
                 ? [self maxIterationsDuringLiveResize]
                 : (GLint)_maxIterations];
-        [self setNeedsDisplay:YES];
     }
 }
 
@@ -142,16 +179,16 @@ static const GLfloat g_vertexBufferData[] = {
 }
 
 // Called externally when the view may have resized
-- (void)resize {
-    NSSize screenSize = [self screenSizeInPixels];
-    glViewport(0, 0, screenSize.width, screenSize.height);
-    [self setScreenSizeUniform:screenSize];
-    [self setNeedsDisplay:YES]; // uncomment if this is called externally
-}
+//- (void)resize {
+//    NSSize screenSize = [self screenSizeInPixels];
+//    GLsizei width = screenSize.width;
+//    GLsizei height = screenSize.height;
+//    glViewport(0, 0, screenSize.width, screenSize.height);
+//    [self setScreenSizeUniform:screenSize];
+//    [self setNeedsDisplay:YES]; // uncomment if this is called externally
+//}
 
 - (void)prepareOpenGL {
-    [super prepareOpenGL];
-
     NSLog(@"OpenGL version is %s.\nSupported GLSL version is %s.",
           (char *)glGetString(GL_VERSION),
           (char *)glGetString(GL_SHADING_LANGUAGE_VERSION)
@@ -181,12 +218,12 @@ static const GLfloat g_vertexBufferData[] = {
     _programID = [_fractalProgram programID];
     [_fractalProgram useProgram];
     
-    glGenTextures(1, &_gradientTextureID);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_1D, _gradientTextureID);
-    glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    [self sendTextureData];
+//    glGenTextures(1, &_gradientTextureID);
+//    glActiveTexture(GL_TEXTURE0);
+//    glBindTexture(GL_TEXTURE_1D, _gradientTextureID);
+//    glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+//    glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+//    [self sendTextureData];
     
 //    GLint texLoc = [_fractalProgram getUniformLocation:"tex"];
     GLint graphSizeLoc = [_fractalProgram getUniformLocation:"graphSize"];
@@ -200,7 +237,7 @@ static const GLfloat g_vertexBufferData[] = {
     // Base scaling of the graph never changes, but we need to know it
     // both here and in the shader.
     glProgramUniform2d(_programID, graphSizeLoc, _baseGraphSize.width, _baseGraphSize.height);
-    [self setScreenSizeUniform:screenSize];
+    [self setScreenSizeUniformWidth:(GLint)screenSize.width height:(GLint)screenSize.height];
     [self setTranslationUniformX:_zoomX Y:_zoomY];
     [self setScaleUniform:_zoomScale];
     [self setMaxIterationsUniform:(GLint)_maxIterations];
@@ -214,18 +251,18 @@ static const GLfloat g_vertexBufferData[] = {
 }
 
 // Needs to be called any time the texture changes
-- (void)sendTextureData {
-    glTexImage1D(
-                 GL_TEXTURE_1D, // target
-                 0, // mip map level (0 = base)
-                 GL_RGBA, // internalFormat
-                 [_texture width], // width in texels
-                 0, // border (legacy; must be 0)
-                 GL_RGB, // external format
-                 GL_FLOAT, // external type of each individual color component
-                 [_texture bytes] // data
-    );
-}
+//- (void)sendTextureData {
+//    glTexImage1D(
+//                 GL_TEXTURE_1D, // target
+//                 0, // mip map level (0 = base)
+//                 GL_RGBA, // internalFormat
+//                 [_texture width], // width in texels
+//                 0, // border (legacy; must be 0)
+//                 GL_RGB, // external format
+//                 GL_FLOAT, // external type of each individual color component
+//                 [_texture bytes] // data
+//    );
+//}
 
 - (CGFloat)aspectRatio {
     NSRect bounds = [self bounds];
@@ -303,8 +340,9 @@ static const GLfloat g_vertexBufferData[] = {
 }
 
 
-- (void)setScreenSizeUniform:(NSSize)screenSize {
-    glProgramUniform2d(_programID, _screenSizeUniformLoc, screenSize.width, screenSize.height);
+- (void)setScreenSizeUniformWidth:(GLdouble)width height:(GLdouble)height {
+//    NSLog(@"setting screen size uniform to %f x %f", width, height);
+    glProgramUniform2d(_programID, _screenSizeUniformLoc, width, height);
 }
 
 - (void)setTranslationUniformX:(GLdouble)x Y:(GLdouble)y {
@@ -388,39 +426,39 @@ static const GLfloat g_vertexBufferData[] = {
 
 - (void)mouseDown:(NSEvent *)theEvent
 {
-    if ([self isRendering]) return;
-    NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    
-    _dragRect = NSMakeRect(location.x, location.y, 0, 0);
-    
-    [self setIsDragging:YES];
-    [self setNeedsDisplay:YES];
+//    if ([self isRendering]) return;
+//    NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+//
+//    _dragRect = NSMakeRect(location.x, location.y, 0, 0);
+//
+//    [self setIsDragging:YES];
+//    [self setNeedsDisplay:YES];
 }
 
 - (void)mouseDragged:(NSEvent *)theEvent
 {
-    if ([self isRendering]) return;
-    NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    
-    _dragRect.size.width = location.x - _dragRect.origin.x;
-    _dragRect.size.height = _dragRect.size.width / [self aspectRatio];
-    
-    if (_dragRect.size.width < 0 && location.y > _dragRect.origin.y) {
-        _dragRect.size.height *= -1;
-    }
-    else if (_dragRect.size.width > 0 && location.y < _dragRect.origin.y) {
-        _dragRect.size.height *= -1;
-    }
-    
-    [self setIsDragging:YES];
-    [self setNeedsDisplay:YES];
+//    if ([self isRendering]) return;
+//    NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+//
+//    _dragRect.size.width = location.x - _dragRect.origin.x;
+//    _dragRect.size.height = _dragRect.size.width / [self aspectRatio];
+//
+//    if (_dragRect.size.width < 0 && location.y > _dragRect.origin.y) {
+//        _dragRect.size.height *= -1;
+//    }
+//    else if (_dragRect.size.width > 0 && location.y < _dragRect.origin.y) {
+//        _dragRect.size.height *= -1;
+//    }
+//
+//    [self setIsDragging:YES];
+//    [self setNeedsDisplay:YES];
 }
 
 - (void)mouseUp:(NSEvent *)theEvent
 {
-    if ([self isRendering]) return;
-    [self setIsDragging:NO];
-    [self zoomToDragRect];
+//    if ([self isRendering]) return;
+//    [self setIsDragging:NO];
+//    [self zoomToDragRect];
 }
 
 - (void)cleanUpOpenGL {

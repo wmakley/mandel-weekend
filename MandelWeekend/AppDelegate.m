@@ -12,12 +12,12 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    [_mandelbrotView resize];
+//    [_mandelbrotView resize];
 }
 
 - (IBAction)refreshButtonPressed:(id)sender
 {
-    [_mandelbrotView redrawFractal];
+//    [_mandelbrotView redrawFractal];
 }
 
 - (IBAction)maxIterationsChanged:(id)sender
@@ -27,12 +27,12 @@
 }
 
 - (void)windowWillStartLiveResize:(NSNotification *)notification {
-    [_mandelbrotView setIsLiveResizing:YES];
+//    [_mandelbrotView setIsLiveResizing:YES];
 }
 
 - (void)windowDidEndLiveResize:(NSNotification *)notification
 {
-    [_mandelbrotView setIsLiveResizing:NO];
+//    [_mandelbrotView setIsLiveResizing:NO];
     // we are using live resizing for now, since there is no way to disable it
 //    [_mandelbrotView resize];
 }
@@ -42,7 +42,7 @@
 }
 
 - (void)applicationWillTerminate:(NSNotification *)notification {
-    [_mandelbrotView cleanUpOpenGL];
+//    [_mandelbrotView cleanUpOpenGL];
 }
 
 @end

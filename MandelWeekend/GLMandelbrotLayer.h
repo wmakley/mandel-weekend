@@ -12,7 +12,7 @@
 #import "ShaderProgram.h"
 #import "Shader.h"
 
-@interface GLMandelbrotView : NSOpenGLView
+@interface GLMandelbrotLayer : NSOpenGLLayer
 {
     GradientTexture *_texture;
     NSRect _dragRect;
@@ -38,6 +38,8 @@
 + (NSSize)defaultGraphSize;
 + (NSPoint)defaultTranslation;
 
+
+@property (assign) BOOL needsDisplay;
 @property (assign) NSTimeInterval renderTime;
 
 // GUI properties
@@ -56,7 +58,7 @@
 // Call to re-render the fractal
 - (void)redrawFractal;
 // Call when the view has been resized to explicitly trigger a render
-- (void)resize;
+//- (void)resize;
 
 - (CGFloat)aspectRatio;
 - (GLint)maxIterationsDuringLiveResize;

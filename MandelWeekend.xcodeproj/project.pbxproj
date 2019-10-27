@@ -10,7 +10,7 @@
 		3D15C7D21ABCC69100C71A52 /* GradientTexture.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D15C7D11ABCC69100C71A52 /* GradientTexture.m */; };
 		3D3CD9891FC7458A0018775A /* mandelbrot.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 3D3CD9881FC7458A0018775A /* mandelbrot.fsh */; };
 		3D3CD98D1FC860750018775A /* mandelbrot.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 3D3CD98C1FC860750018775A /* mandelbrot.vsh */; };
-		3D3CD9911FC89B360018775A /* GLMandelbrotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3CD9901FC89B360018775A /* GLMandelbrotView.m */; };
+		3D3CD9911FC89B360018775A /* GLMandelbrotLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3CD9901FC89B360018775A /* GLMandelbrotLayer.m */; };
 		3D3CD9931FC89B7B0018775A /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D3CD9921FC89B7B0018775A /* OpenGL.framework */; };
 		3D3CD9991FC89F3F0018775A /* Shader.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3CD9981FC89F3F0018775A /* Shader.m */; };
 		3D3CD99B1FC9B3570018775A /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D3CD99A1FC9B3570018775A /* GLUT.framework */; };
@@ -45,8 +45,8 @@
 		3D15C7D11ABCC69100C71A52 /* GradientTexture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GradientTexture.m; sourceTree = "<group>"; };
 		3D3CD9881FC7458A0018775A /* mandelbrot.fsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = mandelbrot.fsh; sourceTree = "<group>"; };
 		3D3CD98C1FC860750018775A /* mandelbrot.vsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = mandelbrot.vsh; sourceTree = "<group>"; };
-		3D3CD98F1FC89B360018775A /* GLMandelbrotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLMandelbrotView.h; sourceTree = "<group>"; };
-		3D3CD9901FC89B360018775A /* GLMandelbrotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLMandelbrotView.m; sourceTree = "<group>"; };
+		3D3CD98F1FC89B360018775A /* GLMandelbrotLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLMandelbrotLayer.h; sourceTree = "<group>"; };
+		3D3CD9901FC89B360018775A /* GLMandelbrotLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLMandelbrotLayer.m; sourceTree = "<group>"; };
 		3D3CD9921FC89B7B0018775A /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = ../../../../../System/Library/Frameworks/OpenGL.framework; sourceTree = "<group>"; };
 		3D3CD9971FC89F3F0018775A /* Shader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Shader.h; sourceTree = "<group>"; };
 		3D3CD9981FC89F3F0018775A /* Shader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Shader.m; sourceTree = "<group>"; };
@@ -157,8 +157,8 @@
 				3D690EBD18479287006267E5 /* MainMenu.xib */,
 				3D690EBA18479287006267E5 /* AppDelegate.h */,
 				3D690EBB18479287006267E5 /* AppDelegate.m */,
-				3D3CD98F1FC89B360018775A /* GLMandelbrotView.h */,
-				3D3CD9901FC89B360018775A /* GLMandelbrotView.m */,
+				3D3CD98F1FC89B360018775A /* GLMandelbrotLayer.h */,
+				3D3CD9901FC89B360018775A /* GLMandelbrotLayer.m */,
 				3D9D4A941FD64F9D00BCFD8C /* ColorPalette.h */,
 				3D9D4A951FD64F9D00BCFD8C /* ColorPalette.m */,
 				3D15C7D01ABCC63800C71A52 /* GradientTexture.h */,
@@ -317,7 +317,7 @@
 				3D690EBC18479287006267E5 /* AppDelegate.m in Sources */,
 				3D6370D41FD72D8700D4C71A /* ShaderProgram.m in Sources */,
 				3D15C7D21ABCC69100C71A52 /* GradientTexture.m in Sources */,
-				3D3CD9911FC89B360018775A /* GLMandelbrotView.m in Sources */,
+				3D3CD9911FC89B360018775A /* GLMandelbrotLayer.m in Sources */,
 				3D690EB518479287006267E5 /* main.m in Sources */,
 				3D3CD9991FC89F3F0018775A /* Shader.m in Sources */,
 				3D9D4A931FD64EB000BCFD8C /* MandelbrotView.m in Sources */,
