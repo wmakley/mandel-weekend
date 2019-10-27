@@ -117,7 +117,11 @@
 
 
 - (GLint)getUniformLocation:(const char *)name {
-    return glGetUniformLocation(_programID, name);
+    GLint location = glGetUniformLocation(_programID, name);
+    if (location == -1) {
+        NSLog(@"Warning: glUniformLocation '%s' is -1. This could mean it doesn't exist or has been optimized out.", name);
+    }
+    return location;
 }
 
 

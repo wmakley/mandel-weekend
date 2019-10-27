@@ -188,16 +188,15 @@ static const GLfloat g_vertexBufferData[] = {
     glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     [self sendTextureData];
     
-    GLint texLoc = [_fractalProgram getUniformLocation:"tex"];
+//    GLint texLoc = [_fractalProgram getUniformLocation:"tex"];
     GLint graphSizeLoc = [_fractalProgram getUniformLocation:"graphSize"];
     _screenSizeUniformLoc = [_fractalProgram getUniformLocation:"screenSize"];
     _translateUniformLoc = [_fractalProgram getUniformLocation:"translate"];
     _scaleUniformLoc = [_fractalProgram getUniformLocation:"scale"];
     _maxIterationsUniformLoc = [_fractalProgram getUniformLocation:"iter"];
-//    NSLog(@"tex: %d, center: %d, scale: %d, iter: %d", texLoc, centerLoc, scaleLoc, iterLoc);
 
     // uniform sampler1D tex - always points to texture 0;
-    glProgramUniform1i(_programID, texLoc, 0);
+//    glProgramUniform1i(_programID, texLoc, 0);
     // Base scaling of the graph never changes, but we need to know it
     // both here and in the shader.
     glProgramUniform2d(_programID, graphSizeLoc, _baseGraphSize.width, _baseGraphSize.height);
