@@ -63,7 +63,7 @@ static const float VERTEX_BUFFER_DATA[] = {
         self.device = MTLCreateSystemDefaultDevice();
     }
     self.colorPixelFormat = MTLPixelFormatBGRA8Unorm;
-    self.clearColor = MTLClearColorMake(1.0, 0.0, 0.0, 0.0);
+    self.clearColor = MTLClearColorMake(0.0, 0.0, 0.0, 1.0);
 //    self.depthStencilPixelFormat = MTLPixelFormatDepth32Float_Stencil8;
 //    self.sampleCount = self.renderer.multisamples;
 
@@ -108,9 +108,28 @@ static const float VERTEX_BUFFER_DATA[] = {
         return;
     }
 
+    id<MTLCommandQueue> commandQueue = [self.device newCommandQueue];
+    if (commandQueue == nil) {
+        NSLog(@"Warning: commandQueue is nil");
+        return;
+    }
+
+    id<MTLCommandBuffer> commandBuffer = commandQueue.commandBuffer;
+    if (commandBuffer == nil) {
+        NSLog(@"Warning: command buffer is nil");
+    }
+
     [self setIsRendering:YES];
     [self setRenderTime:0];
     NSTimeInterval startTime = [NSDate timeIntervalSinceReferenceDate];
+
+
+    id<MTLRenderCommandEncoder> commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:renderPassDescriptor];
+    [commandEncoder endEncoding];
+
+    id<MTLDrawable> drawable = view.currentDrawable;
+    [commandBuffer presentDrawable:drawable];
+    [commandBuffer commit];
 
     NSTimeInterval endTime = [NSDate timeIntervalSinceReferenceDate];
     [self setRenderTime:endTime - startTime];

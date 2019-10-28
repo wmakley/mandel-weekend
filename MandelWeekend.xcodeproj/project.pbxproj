@@ -12,7 +12,6 @@
 		3D3CD98D1FC860750018775A /* mandelbrot.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 3D3CD98C1FC860750018775A /* mandelbrot.vsh */; };
 		3D3CD9911FC89B360018775A /* MandelbrotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3CD9901FC89B360018775A /* MandelbrotView.m */; };
 		3D3CD9991FC89F3F0018775A /* Shader.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D3CD9981FC89F3F0018775A /* Shader.m */; };
-		3D4AD337236652C5001A5E3F /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D4AD336236652C5001A5E3F /* Metal.framework */; };
 		3D6370D41FD72D8700D4C71A /* ShaderProgram.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D6370D31FD72D8700D4C71A /* ShaderProgram.m */; };
 		3D690EA918479287006267E5 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D690EA818479287006267E5 /* Cocoa.framework */; };
 		3D690EB318479287006267E5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D690EB118479287006267E5 /* InfoPlist.strings */; };
@@ -48,7 +47,6 @@
 		3D3CD9901FC89B360018775A /* MandelbrotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MandelbrotView.m; sourceTree = "<group>"; };
 		3D3CD9971FC89F3F0018775A /* Shader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Shader.h; sourceTree = "<group>"; };
 		3D3CD9981FC89F3F0018775A /* Shader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Shader.m; sourceTree = "<group>"; };
-		3D4AD336236652C5001A5E3F /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
 		3D6370D21FD72D8700D4C71A /* ShaderProgram.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderProgram.h; sourceTree = "<group>"; };
 		3D6370D31FD72D8700D4C71A /* ShaderProgram.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ShaderProgram.m; sourceTree = "<group>"; };
 		3D690EA518479287006267E5 /* MandelWeekend.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MandelWeekend.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -82,7 +80,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D8EB1EC23665496001DF75E /* MetalKit.framework in Frameworks */,
-				3D4AD337236652C5001A5E3F /* Metal.framework in Frameworks */,
 				3D690EA918479287006267E5 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -130,7 +127,6 @@
 			isa = PBXGroup;
 			children = (
 				3D8EB1EB23665496001DF75E /* MetalKit.framework */,
-				3D4AD336236652C5001A5E3F /* Metal.framework */,
 				3D690EA818479287006267E5 /* Cocoa.framework */,
 				3D690EAA18479287006267E5 /* Other Frameworks */,
 			);
