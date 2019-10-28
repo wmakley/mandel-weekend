@@ -102,6 +102,12 @@ static const float VERTEX_BUFFER_DATA[] = {
 - (void)drawInMTKView:(MTKView *)view {
     if ([self isDragging] || [self isRendering]) return;
 
+    MTLRenderPassDescriptor *renderPassDescriptor = view.currentRenderPassDescriptor;
+    if (renderPassDescriptor == nil) {
+        NSLog(@"Warning: renderPassDescriptor is nil");
+        return;
+    }
+
     [self setIsRendering:YES];
     [self setRenderTime:0];
     NSTimeInterval startTime = [NSDate timeIntervalSinceReferenceDate];
