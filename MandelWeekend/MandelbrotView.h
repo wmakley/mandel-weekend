@@ -12,7 +12,7 @@
 //#import "ShaderProgram.h"
 //#import "Shader.h"
 
-@interface MandelbrotView : MTKView
+@interface MandelbrotView : MTKView <MTKViewDelegate>
 {
 //    GradientTexture *_texture;
     NSRect _dragRect;

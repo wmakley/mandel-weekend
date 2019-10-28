@@ -55,9 +55,17 @@ static const float VERTEX_BUFFER_DATA[] = {
 
 - (void)customInit
 {
-    self.delegate = nil;
+    self.delegate = self;
     self.paused = YES;
     self.enableSetNeedsDisplay = YES;
+
+    if (!self.device) {
+        self.device = MTLCreateSystemDefaultDevice();
+    }
+    self.colorPixelFormat = MTLPixelFormatBGRA8Unorm;
+    self.clearColor = MTLClearColorMake(1.0, 0.0, 0.0, 0.0);
+//    self.depthStencilPixelFormat = MTLPixelFormatDepth32Float_Stencil8;
+//    self.sampleCount = self.renderer.multisamples;
 
     _zoomX = 0.0;
     _zoomY = 0.0;
@@ -73,7 +81,7 @@ static const float VERTEX_BUFFER_DATA[] = {
 
 - (instancetype)initWithCoder:(NSCoder *)coder
 {
-    NSLog(@"initWithCoder");
+    NSLog(@"WARNING: initWithCoder not implemented!");
     self = [super initWithCoder:coder];
     if (self) {
         [self customInit];
@@ -83,7 +91,7 @@ static const float VERTEX_BUFFER_DATA[] = {
 
 - (instancetype)initWithFrame:(CGRect)frameRect device:(id<MTLDevice>)device;
 {
-    NSLog(@"initWithFrame");
+//    NSLog(@"initWithFrame");
     self = [super initWithFrame:frameRect device:device];
     if (self) {
         [self customInit];
@@ -91,7 +99,7 @@ static const float VERTEX_BUFFER_DATA[] = {
     return self;
 }
 
-- (void)drawRect:(NSRect)dirtyRect {
+- (void)drawInMTKView:(MTKView *)view {
     if ([self isDragging] || [self isRendering]) return;
 
     [self setIsRendering:YES];
@@ -103,7 +111,7 @@ static const float VERTEX_BUFFER_DATA[] = {
     [self setIsRendering:NO];
 }
 
-- (void)reshape {
+- (void)mtkView:(MTKView *)view drawableSizeWillChange:(CGSize)size {
 //    NSLog(@"reshape");
     // Just do live resizing for now
     NSSize screenSize = [self screenSizeInPixels];
